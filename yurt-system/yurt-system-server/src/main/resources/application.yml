@@ -1,0 +1,44 @@
+spring:
+  profiles:
+    active: default
+  datasource:
+    url: jdbc:mysql://localhost:3306/lit?useSSL=false&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&allowMultiQueries=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+  jackson:
+    default-property-inclusion: non_empty
+  mustache:
+    suffix: .html
+    expose-spring-macro-helpers: false
+
+
+
+lit:
+  configure:
+    single-page: true
+
+
+
+logging:
+  level:
+#    com.github: debug
+    org:
+      springframework:
+        web: trace
+        security: trace
+        jdbc.core: debug
+        security.access.prepost: info
+        boot:
+          web.servlet: debug
+#        security: debug
+
+---
+spring:
+  profiles: docker
+c3p0:
+  jdbcUrl: jdbc:mysql://${mysql-docker:mysql-server}:3306/lit
+  driverClass: com.mysql.jdbc.Driver
+  user: root
+  password: 123456
+

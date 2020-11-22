@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>找回密码</title>
+</head>
+
+<body>
+<div v-cloak class="aui-page page-login">
+    <div class="login-wrapper">
+        <!-- page-header -->
+        <header class="aui-page-header">
+            <h2 class="aui-brand">lit-admin</h2>
+            <ul class="aui-intro">
+                <li>Out-of-the-box Admin system.</li>
+            </ul>
+        </header>
+        <!-- page-main -->
+        <main class="aui-page-main">
+            <template v-if="step === 1">
+                <h3 class="login-title">找回密码</h3>
+                <el-form :model="dataForm" :rules="dataRule" ref="dataForm"
+                         @keyup.enter.native="dataFormSubmitHandle()" status-icon>
+                    <el-form-item prop="mobile">
+                        <el-input v-model="dataForm.mobile" placeholder="手机号码">
+                                <span slot="prefix" class="el-input__icon">
+                                    <i class="ic icall"></i>
+                                </span>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item prop="captcha">
+                        <el-row :gutter="20">
+                            <el-col :span="14">
+                                <el-input v-model="dataForm.captcha" placeholder="验证码">
+                                        <span slot="prefix" class="el-input__icon">
+                                            <i class="ic icall"></i>
+                                        </span>
+                                </el-input>
+                            </el-col>
+                            <el-col :span="10" class="login-captcha">
+                                <img src="../img/captcha.png" alt="">
+                            </el-col>
+                        </el-row>
+                    </el-form-item>
+                    <el-form-item prop="smsCaptcha">
+                        <el-row :gutter="20">
+                            <el-col :span="14">
+                                <el-input v-model="dataForm.smsCaptcha" placeholder="短信验证码">
+                                        <span slot="prefix" class="el-input__icon">
+                                            <i class="ic icall"></i>
+                                        </span>
+                                </el-input>
+                            </el-col>
+                            <el-col :span="10">
+                                <el-button class="w-100">获取验证码</el-button>
+                            </el-col>
+                        </el-row>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button class="w-100" type="primary" @click="dataFormSubmitHandle()">找回密码</el-button>
+                    </el-form-item>
+                </el-form>
+            </template>
+            <template v-if="step === 2">
+                <h3 class="login-title">重置密码</h3>
+                <el-form :model="dataForm2" :rules="dataRule2" ref="dataForm2"
+                         @keyup.enter.native="dataForm2SubmitHandle()" status-icon>
+                    <el-form-item prop="password">
+                        <el-input v-model="dataForm2.password" type="password" placeholder="新密码">
+                                <span slot="prefix" class="el-input__icon">
+                                    <i class="ic icall"></i>
+                                </span>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item prop="confirmPassword">
+                        <el-input v-model="dataForm2.confirmPassword" type="password" placeholder="确认密码">
+                                <span slot="prefix" class="el-input__icon">
+                                    <i class="ic icall"></i>
+                                </span>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button class="w-100" type="primary" @click="dataForm2SubmitHandle()">重置密码</el-button>
+                    </el-form-item>
+                </el-form>
+            </template>
+        </main>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var CONTEXT_PATH = '{{contextPath}}'
+
+        console.log(CONTEXT_PATH)
+        var vm = window.vm = new Vue({
+            el: '.aui-page',
+            data: function () {
+                return {
+                    step: 1,
+                    dataForm: {
+                        mobile: '',
+                        captcha: '',
+                        smsCaptcha: ''
+                    },
+                    dataRule: {
+                        mobile: [
+                            { required: true, message: '必填项不能为空', trigger: 'blur' }
+                        ],
+                        captcha: [
+                            { required: true, message: '必填项不能为空', trigger: 'blur' }
+                        ],
+                        smsCaptcha: [
+                            { required: true, message: '必填项不能为空', trigger: 'blur' }
+                        ]
+                    },
+                    dataForm2: {
+                        password: '',
+                        confirmPassword: ''
+                    },
+                    dataRule2: {
+                        password: [
+                            { required: true, message: '必填项不能为空', trigger: 'blur' }
+                        ],
+                        confirmPassword: [
+                            { required: true, message: '必填项不能为空', trigger: 'blur' }
+                        ]
+                    }
+                }
+            },
+            beforeCreate() {
+                vm = this;
+            },
+            methods: {
+                dataFormSubmitHandle() {
+                    vm.$refs['dataForm'].validate(function (valid) {
+                        if (valid) {
+                            vm.$refs['dataForm'].clearValidate();
+                            vm.step++;
+                        }
+                    });
+                },
+                dataForm2SubmitHandle() {
+                    vm.$refs['dataForm2'].validate(function (valid) {
+                        if (valid) {
+                            window.location.href = './login.html';
+                        }
+                    });
+                }
+            }
+        });
+    })();
+</script>
+</body>
+
+</html>
