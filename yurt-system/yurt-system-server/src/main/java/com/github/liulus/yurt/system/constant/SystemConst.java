@@ -9,6 +9,7 @@ public abstract class SystemConst {
 
     public static final String TABLE_PREFIX  = "yurt_";
 
+    public static final String CDN_HOST  = "cdnHost";
 
 
 }

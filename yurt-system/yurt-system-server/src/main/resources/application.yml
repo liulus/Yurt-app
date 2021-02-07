@@ -1,3 +1,9 @@
+server:
+  port: 8020
+  error:
+    whitelabel:
+      enabled: false
+
 spring:
   profiles:
     active: default
@@ -14,15 +20,16 @@ spring:
 
 
 
-lit:
-  configure:
-    single-page: true
+yurt:
+  view:
+    ui: element
+    cdn-host: http://cdn.skeyurt.net
 
 
 
 logging:
   level:
-#    com.github: debug
+    #    com.github: debug
     org:
       springframework:
         web: trace

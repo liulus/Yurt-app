@@ -1,7 +1,6 @@
 package com.github.liulus.yurt.system.util;
 
 import com.github.liulus.yurt.convention.bean.BeanUtils;
-import com.github.liulus.yurt.convention.util.Asserts;
 import com.github.liulus.yurt.system.security.LoginUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
@@ -9,6 +8,7 @@ import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.util.Assert;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -31,7 +31,7 @@ public abstract class JwtUtils {
     private static final long EXPIRE = 1000 * 60 * 60 * 12;
 
     public static String encode(LoginUser user) {
-        Asserts.notNull(user, "login user must not bu null");
+        Assert.notNull(user, "login user must not bu null");
         Map<String, Object> claimMap = BeanUtils.beanToMap(user, IGNORE);
         Set<String> authorities = AuthorityUtils.authorityListToSet(user.getAuthorities());
         claimMap.put("authorities", authorities);

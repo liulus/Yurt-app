@@ -2,6 +2,9 @@ package com.github.liulus.yurt.system.security;
 
 
 import com.github.liulus.yurt.system.util.JwtUtils;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,11 +25,13 @@ import java.util.Enumeration;
  */
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
+    private static final String DENIED_RES = "{\"code\": \"%s\", \"success\": false, \"message\": \"%s\"}";
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String tokenValue = extractToken(request);
         if (StringUtils.isEmpty(tokenValue)) {
-            filterChain.doFilter(request, response);
+            invoke(request, response, filterChain);
             return;
         }
 
@@ -41,7 +46,25 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         } catch (Exception ex) {
             SecurityContextHolder.clearContext();
         }
-        filterChain.doFilter(request, response);
+        invoke(request, response, filterChain);
+
+    }
+
+    private void invoke(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        try {
+            filterChain.doFilter(request, response);
+        } catch (AccessDeniedException deniedException) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if(authentication instanceof AnonymousAuthenticationToken) {
+                response.getWriter().write(String.format(DENIED_RES, "UN_LOGIN", "您当前未登录, 请登录"));
+                return;
+            }
+            response.getWriter().write(String.format(DENIED_RES, "ACCESS_DENIED", "您无权访问, 请重新登录"));
+        } catch (Exception ex) {
+            throw ex;
+        }
     }
 
     protected String extractToken(HttpServletRequest request) {
@@ -55,11 +78,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             if (token == null) {
                 logger.debug("Token not found in request parameters.  Not an OAuth2 request.");
             }
-//            else {
-//                request.setAttribute(OAuth2AuthenticationDetails.ACCESS_TOKEN_TYPE, OAuth2AccessToken.BEARER_TYPE);
-//            }
         }
-
         return token;
     }
 
@@ -71,9 +90,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             String value = headers.nextElement();
             if (value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase())) {
                 String authHeaderValue = value.substring(BEARER_TYPE.length()).trim();
-                // Add this here for the auth details later. Would be better to change the signature of this method.
-//                request.setAttribute(OAuth2AuthenticationDetails.ACCESS_TOKEN_TYPE,
-//                        value.substring(0, OAuth2AccessToken.BEARER_TYPE.length()).trim());
                 int commaIndex = authHeaderValue.indexOf(',');
                 if (commaIndex > 0) {
                     authHeaderValue = authHeaderValue.substring(0, commaIndex);

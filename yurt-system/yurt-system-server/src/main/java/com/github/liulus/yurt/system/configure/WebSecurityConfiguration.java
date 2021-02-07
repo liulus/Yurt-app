@@ -1,5 +1,6 @@
 package com.github.liulus.yurt.system.configure;
 
+import com.github.liulus.yurt.system.security.JsonAccessDeniedHandler;
 import com.github.liulus.yurt.system.security.JwtAuthenticationProcessingFilter;
 import com.github.liulus.yurt.system.security.JwtLoginHandler;
 import com.github.liulus.yurt.system.security.LoginUserService;
@@ -51,6 +52,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         JwtLoginHandler handler = new JwtLoginHandler();
         // 登录配置
         http.formLogin()
+                .loginPage("/login")
                 .successHandler(handler)
                 .failureHandler(handler);
 
@@ -60,6 +62,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll();
 
+        JsonAccessDeniedHandler deniedHandler = new JsonAccessDeniedHandler();
+        http.exceptionHandling().accessDeniedHandler(deniedHandler)
+                .authenticationEntryPoint(deniedHandler);
         // 跨域问题
         http.cors().configurationSource(source());
 

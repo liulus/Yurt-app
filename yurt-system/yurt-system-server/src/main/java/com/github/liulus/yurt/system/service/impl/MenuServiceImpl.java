@@ -2,13 +2,13 @@ package com.github.liulus.yurt.system.service.impl;
 
 import com.github.liulus.yurt.convention.bean.BeanUtils;
 import com.github.liulus.yurt.convention.exception.ServiceException;
-import com.github.liulus.yurt.convention.util.Asserts;
 import com.github.liulus.yurt.system.model.dto.MenuDTO;
 import com.github.liulus.yurt.system.model.entity.Menu;
 import com.github.liulus.yurt.system.repository.MenuRepository;
 import com.github.liulus.yurt.system.service.MenuService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -87,7 +87,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public int update(MenuDTO.Update update) {
-        Asserts.notNull(update, "更新菜单不能为空");
+        Assert.notNull(update, "更新菜单不能为空");
         Menu old = menuRepository.selectById(update.getId());
         if (old == null) {
             return 0;
@@ -109,7 +109,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public int delete(Long id) {
         Menu menu = menuRepository.selectById(id);
-        Asserts.notNull(menu, "要删除的菜单id {} 不存在", id);
+        Assert.notNull(menu, String.format("要删除的菜单id %d 不存在", id));
 
         int count = menuRepository.countByParentId(menu.getId());
         if (count > 0) {
