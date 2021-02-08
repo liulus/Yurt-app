@@ -1,6 +1,0 @@
-rootProject.name = 'Yurt-app'
-include 'yurt-system:yurt-system-api'
-findProject(':yurt-system:yurt-system-api')?.name = 'yurt-system-api'
-include 'yurt-system:yurt-system-server'
-findProject(':yurt-system:yurt-system-server')?.name = 'yurt-system-server'
-
