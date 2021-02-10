@@ -34,7 +34,7 @@ logging:
       springframework:
         web: trace
         security: trace
-        jdbc.core: debug
+        jdbc: debug
         security.access.prepost: info
         boot:
           web.servlet: debug
