@@ -24,14 +24,15 @@ import javax.annotation.Resource
 @Transactional
 open class OrganizationServiceImpl : OrganizationService {
     @Resource
-    private val orgRepository: OrgRepository? = null
+    private lateinit var orgRepository: OrgRepository
+    
     override fun findPageList(qo: OrganizationQo?): Page<Organization?>? {
 //        return orgRepository.selectPageList(qo);
         return null
     }
 
     override fun buildOrgTree(): OrganizationVo.Detail? {
-        val organizations = orgRepository!!.selectAll()
+        val organizations = orgRepository.selectAll()
         if (CollectionUtils.isEmpty(organizations)) {
             return null
         }
@@ -61,29 +62,29 @@ open class OrganizationServiceImpl : OrganizationService {
         }
     }
 
-    override fun findById(id: Long?): Organization? {
-        return orgRepository!!.selectById(id)
+    override fun findById(id: Long): Organization? {
+        return orgRepository.selectById(id)
     }
 
     override fun findByCode(orgCode: String?): Organization? {
-        return orgRepository!!.selectByCode(orgCode)
+        return orgRepository.selectByCode(orgCode)
     }
 
     private fun findRootOrg(): Organization {
-        return orgRepository!!.selectRootOrg()!!
+        return orgRepository.selectRootOrg()!!
     }
 
     override fun insert(organization: Organization?): Long? {
         checkOrgCode(organization!!.code)
         val parentOrg = if (organization.parentId == null || organization.parentId == 0L) findRootOrg() else findById(
-            organization.parentId
+            organization.parentId!!
         )
         if (parentOrg == null) {
             throw ServiceException("不存在父节点" + organization.parentId)
         }
 
         // 处理 levelIndex
-        val organizations = orgRepository!!.selectByParentId(parentOrg.id)
+        val organizations = orgRepository.selectByParentId(parentOrg.id)
         val levelIndexes = organizations!!.asSequence().map { it?.levelIndex }.toList()
 
         organization.parentId = parentOrg.id
@@ -93,12 +94,12 @@ open class OrganizationServiceImpl : OrganizationService {
     }
 
     override fun update(organization: Organization?) {
-        val oldOrg = findById(organization!!.id)
+        val oldOrg = findById(organization!!.id!!)
         Optional.ofNullable(oldOrg)
             .map(Organization::code)
             .filter { code: String? -> code != organization.code }
             .ifPresent { orgCode: String? -> checkOrgCode(orgCode) }
-        orgRepository!!.updateIgnoreNull(organization)
+        orgRepository.updateIgnoreNull(organization)
     }
 
     private fun checkOrgCode(orgCode: String?) {
@@ -115,7 +116,7 @@ open class OrganizationServiceImpl : OrganizationService {
         if (ids == null || ids.size == 0) {
             return
         }
-//        val orgs = orgRepository!!.selectByIds(Arrays.asList(*ids))
+//        val orgs = orgRepository.selectByIds(Arrays.asList(*ids))
 //        val validIds: MutableList<Long?> = ArrayList(orgs.size)
 //        for ((id, parentId, _, fullName) in orgs) {
 //            val count = orgRepository.countByParentId(parentId)

@@ -47,7 +47,7 @@ open class DictionaryServiceImpl : DictionaryService {
     }
 
     private fun checkDictKey(dictKey: String?, parentId: Long?) {
-        val dict = dictionaryRepository!!.findByKeyAndParentId(dictKey, parentId)
+        val dict = dictionaryRepository!!.selectByKeyAndParentId(dictKey!!, parentId!!)
         if (dict != null) {
             throw ServiceException("字典Key已经存在")
         }
@@ -124,7 +124,7 @@ open class DictionaryServiceImpl : DictionaryService {
      * *********************************************** *
      */
     override fun findByRootKey(key: String?): Dictionary? {
-        return dictionaryRepository!!.findByKeyAndParentId(key, 0L)
+        return dictionaryRepository!!.selectByKeyAndParentId(key!!, 0L)
     }
 
     override fun findByKeys(vararg keys: String?): Dictionary? {
@@ -134,7 +134,7 @@ open class DictionaryServiceImpl : DictionaryService {
         var result = Dictionary()
         result.id = 0L
         for (key in keys) {
-            result = dictionaryRepository!!.findByKeyAndParentId(key, result.id)!!
+            result = dictionaryRepository!!.selectByKeyAndParentId(key!!, result.id!!)!!
         }
         return result
     }

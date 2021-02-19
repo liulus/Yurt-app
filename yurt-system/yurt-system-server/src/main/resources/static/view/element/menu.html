@@ -1,0 +1,45 @@
+<main class="main">
+    <el-breadcrumb class="breadcrumb">
+        <el-breadcrumb-item>系统管理</el-breadcrumb-item>
+        <el-breadcrumb-item>菜单管理</el-breadcrumb-item>
+    </el-breadcrumb>
+    <div class="main__bd">
+        <el-row :gutter="20">
+            <el-col :span="5">
+                <el-tree :data="menuTree" :props="{'label': 'name'}"
+                         node-key="id"
+                         :default-expanded-keys="[0]"
+                         :expand-on-click-node="false"
+                         @node-click="handleNodeClick"></el-tree>
+            </el-col>
+            <el-col :span="19">
+                <el-button type="primary" plain @click="editFormConfig.visible=true">+</el-button>
+                <el-table :data="menuList" width="100%">
+                    <el-table-column prop="code" label="编码"/>
+                    <el-table-column prop="name" label="名称"/>
+                    <el-table-column prop="url" label="名称"/>
+                    <el-table-column prop="icon" label="名称"/>
+                </el-table>
+            </el-col>
+        </el-row>
+    </div>
+
+    <el-dialog :title="editFormConfig.title" :visible.sync="editFormConfig.visible" :close-on-click-modal="false">
+        <el-form :model="editForm">
+            <el-form-item label="活动名称" :label-width="editFormConfig.formLabelWidth">
+                <el-input v-model="editForm.name" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="活动区域" :label-width="editFormConfig.formLabelWidth">
+                <el-select v-model="editForm.region" placeholder="请选择活动区域">
+                    <el-option label="区域一" value="shanghai"></el-option>
+                    <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="t-center">
+            <el-button type="primary" @click="editFormConfig.visible = false">确 定</el-button>
+            <el-button @click="editFormConfig.visible = false">取 消</el-button>
+        </div>
+    </el-dialog>
+
+</main>

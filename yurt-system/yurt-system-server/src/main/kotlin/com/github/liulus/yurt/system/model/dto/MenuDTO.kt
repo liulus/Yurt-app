@@ -7,7 +7,7 @@ import com.github.liulus.yurt.convention.data.PageQuery
  * Date : 2017/7/13 19:49
  * version $Id: MenuDTO.java, v 0.1 Exp $
  */
-interface MenuDTO {
+object MenuDTO {
 
     class Query : PageQuery() {
         var enabled: Boolean? = null

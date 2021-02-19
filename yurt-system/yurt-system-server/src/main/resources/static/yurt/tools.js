@@ -1,7 +1,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
         typeof define === 'function' && define.amd ? define(factory) :
-            (global = global || self, global.util = factory());
+            (global = global || self, global.Tools = factory());
 }(this, function () {
     function request(method, url, params, isJson) {
         if (url.indexOf('/') !== 0) {
@@ -31,7 +31,7 @@
             .then(res => (res.headers.get("content-type") || '').indexOf('application/json') >= 0 ? res.json() : res.text())
             .then(res => res.code == 'UN_LOGIN' ? window.location.href = '/login' : res)
             .then(res => {
-                if (res.code == 'ACCESS_DENIED') {
+                if (res.code !== '1') {
                     window.app.$message.error(res.message)
                 }
                 return res

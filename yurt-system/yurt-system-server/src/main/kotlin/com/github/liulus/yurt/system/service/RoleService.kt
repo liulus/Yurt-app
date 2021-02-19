@@ -79,6 +79,6 @@ interface RoleService {
      * @param userId userId
      * @return List<Role>
     </Role> */
-    fun findByUserId(userId: Long?): List<Role?>?
+    fun findByUserId(userId: Long): List<Role>
 //    fun findAuthorityTree(roleId: Long?): List<AuthorityVo.TreeNode?>?
 }

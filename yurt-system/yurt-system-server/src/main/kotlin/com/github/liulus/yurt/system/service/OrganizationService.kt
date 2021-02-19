@@ -32,7 +32,7 @@ interface OrganizationService {
      * @param id
      * @return
      */
-    fun findById(id: Long?): Organization?
+    fun findById(id: Long): Organization?
     fun findByCode(orgCode: String?): Organization?
     fun insert(organization: Organization?): Long?
     fun update(organization: Organization?)

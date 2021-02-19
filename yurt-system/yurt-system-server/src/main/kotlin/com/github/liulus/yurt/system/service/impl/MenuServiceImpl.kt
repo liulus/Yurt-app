@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.Assert
 import org.springframework.util.CollectionUtils
 import org.springframework.util.StringUtils
-import java.util.stream.Collectors
 import javax.annotation.Resource
 
 /**
@@ -23,48 +22,46 @@ import javax.annotation.Resource
 @Transactional
 open class MenuServiceImpl : MenuService {
     @Resource
-    private val menuRepository: MenuRepository? = null
+    private lateinit var menuRepository: MenuRepository
+
+
     override fun findById(id: Long?): Menu? {
-        return menuRepository!!.selectById(id)
+        return menuRepository.selectById(id)
     }
 
-    override fun buildMenuTree(filterDisabled: Boolean, filterEmpty: Boolean): List<MenuDTO.Detail?>? {
+    override fun buildMenuTree(filterDisabled: Boolean, filterEmpty: Boolean): List<MenuDTO.Detail> {
         val query = MenuDTO.Query()
         query.isDisablePage = true
         if (filterDisabled) {
-            query.enabled = java.lang.Boolean.TRUE
+            query.enabled = true
         }
-        val menus = menuRepository!!.selectByQuery(query)
+        val menus = menuRepository.selectByQuery(query)
 
-        val menuMap = menus?.asSequence()!!.sortedBy { it?.orderNum }
+        val menuMap = menus.asSequence().sortedBy { it.orderNum }
             .map { BeanUtils.convert(MenuDTO.Detail::class.java, it) }
             .groupBy { it.parentId }
             .toMap()
         val rootMenus = menuMap[0L]!!
         setChildren(rootMenus, menuMap)
-        return if (filterEmpty) {
-            rootMenus.stream()
-                .filter { detail: MenuDTO.Detail? ->
-                    StringUtils.hasText(
-                        detail!!.url
-                    ) || detail.isParent!!
-                }
-                .collect(Collectors.toList())
-        } else rootMenus
+
+        if (filterEmpty) {
+            return rootMenus.filter { StringUtils.hasText(it.url) || it.isParent!! }.toList()
+        }
+        return rootMenus
     }
 
-    private fun setChildren(parents: List<MenuDTO.Detail?>, nodeMap: Map<Long?, List<MenuDTO.Detail>>) {
+    private fun setChildren(parents: List<MenuDTO.Detail>, nodeMap: Map<Long?, List<MenuDTO.Detail>>) {
         if (CollectionUtils.isEmpty(parents)) {
             return
         }
         for (menu in parents) {
-            val children = nodeMap[menu!!.id]!!
+            val children = nodeMap[menu.id]
             if (CollectionUtils.isEmpty(children)) {
                 menu.isParent = false
             } else {
                 menu.isParent = true
                 menu.children = children
-                setChildren(children, nodeMap)
+                setChildren(children!!, nodeMap)
             }
         }
     }
@@ -75,12 +72,12 @@ open class MenuServiceImpl : MenuService {
             Menu::class.java, add
         )
         menu.enabled = true
-        return menuRepository!!.insert(menu)
+        return menuRepository.insert(menu)
     }
 
     override fun update(update: MenuDTO.Update?): Int {
         Assert.notNull(update, "更新菜单不能为空")
-        val (_, _, code) = menuRepository!!.selectById(update!!.id) ?: return 0
+        val (_, _, code) = menuRepository.selectById(update!!.id) ?: return 0
         if (update.code != code) {
             checkMenuCode(update.code)
         }
@@ -91,14 +88,14 @@ open class MenuServiceImpl : MenuService {
     }
 
     private fun checkMenuCode(code: String?) {
-        val menu = menuRepository!!.findByCode(code)
+        val menu = menuRepository.findByCode(code)
         if (menu != null) {
             throw ServiceException("菜单编码已经存在")
         }
     }
 
     override fun delete(id: Long?): Int {
-        val menu = menuRepository!!.selectById(id)
+        val menu = menuRepository.selectById(id)
         Assert.notNull(menu, String.format("要删除的菜单id %d 不存在", id))
         val count = menuRepository.countByParentId(menu?.id)
         if (count > 0) {
@@ -112,6 +109,6 @@ open class MenuServiceImpl : MenuService {
         val upMenu = Menu()
         upMenu.id = id
         upMenu.enabled = !enabled!!
-        menuRepository!!.updateIgnoreNull(upMenu)
+        menuRepository.updateIgnoreNull(upMenu)
     }
 }

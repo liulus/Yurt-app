@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.CollectionUtils
 import org.springframework.util.StringUtils
-import java.util.Collections
 import javax.annotation.Resource
 
 /**
@@ -24,19 +23,19 @@ import javax.annotation.Resource
 @Transactional
 open class AuthorityServiceImpl : AuthorityService {
     @Resource
-    private val authorityRepository: AuthorityRepository? = null
+    private lateinit var authorityRepository: AuthorityRepository
 
     @Resource
-    private val roleAuthorityRepository: RoleAuthorityRepository? = null
+    private lateinit var roleAuthorityRepository: RoleAuthorityRepository
 
     @Resource
     private val dictionaryService: DictionaryService? = null
     override fun findPageList(qo: AuthorityQo): Page<Authority> {
-        return authorityRepository!!.selectPageList(qo)
+        return authorityRepository.selectPageList(qo)
     }
 
 //    override fun findAuthorityTree(): List<AuthorityVo> {
-//        val authorities = authorityRepository!!.selectAll()
+//        val authorities = authorityRepository.selectAll()
 //        val authorityTypes = dictionaryService!!.findChildByRootKey("")
 //        if (CollectionUtils.isEmpty(authorityTypes)) {
 //            return BeanUtils.convertList(
@@ -71,38 +70,38 @@ open class AuthorityServiceImpl : AuthorityService {
 //    }
 
     override fun findAll(): List<Authority> {
-        return authorityRepository!!.selectAll()
+        return authorityRepository.selectAll()
     }
 
 //    override fun findByRoleId(roleId: Long): List<Authority> {
-//        val roleAuthorities = roleAuthorityRepository!!.selectByRoleId(roleId)
+//        val roleAuthorities = roleauthorityRepository.selectByRoleId(roleId)
 //        if (CollectionUtils.isEmpty(roleAuthorities)) {
 //            return emptyList()
 //        }
 //        val authIds = roleAuthorities.stream().map(RoleAuthority::authorityId).collect(Collectors.toList())
-//        return authorityRepository!!.selectByIds(authIds)
+//        return authorityRepository.selectByIds(authIds)
 //    }
 
-    override fun findByRoleIds(roleIds: List<Long?>?): MutableList<Authority?> {
-        val roleAuthorities = roleAuthorityRepository!!.selectByRoleIds(roleIds)
+    override fun findByRoleIds(roleIds: List<Long>): List<Authority> {
+        val roleAuthorities = roleAuthorityRepository.selectByRoleIds(roleIds)
         if (CollectionUtils.isEmpty(roleAuthorities)) {
-            return Collections.emptyList()
+            return emptyList()
         }
-        val authIds = roleAuthorities?.map { it?.authorityId }
-        return authorityRepository!!.selectByIds(authIds)
+        val authIds = roleAuthorities.asSequence().map { it.authorityId }.toList()
+        return authorityRepository.selectByIds(authIds)
     }
 
 //    override fun findById(id: Long): Authority {
-//        return authorityRepository!!.selectById(id)
+//        return authorityRepository.selectById(id)
 //    }
 
 //    override fun findByCode(code: String): Authority {
-//        return authorityRepository!!.selectByCode(code)
+//        return authorityRepository.selectByCode(code)
 //    }
 
 //    override fun insert(authority: Authority): Long {
 //        checkAuthorityCode(authority.code)
-//        authorityRepository!!.insert(authority)
+//        authorityRepository.insert(authority)
 //        return authority.id!!
 //    }
 
@@ -112,14 +111,14 @@ open class AuthorityServiceImpl : AuthorityService {
 //            .map(Authority::code)
 //            .filter { code: String? -> code != authority.code }
 //            .ifPresent { code: String? -> checkAuthorityCode(code) }
-//        authorityRepository!!.updateIgnoreNull(authority)
+//        authorityRepository.updateIgnoreNull(authority)
 //    }
 
     private fun checkAuthorityCode(code: String?) {
         if (StringUtils.isEmpty(code)) {
             throw ServiceException("权限码不能为空!")
         }
-        val count = authorityRepository!!.countByCode(code)
+        val count = authorityRepository.countByCode(code!!)
         if (count > 0) {
             throw ServiceException("权限码已经存在!")
         }
@@ -128,6 +127,6 @@ open class AuthorityServiceImpl : AuthorityService {
 //    override fun delete(ids: Array<Long>): Int {
 //        return if (ids == null || ids.size == 0) {
 //            0
-//        } else authorityRepository!!.deleteByIds(Arrays.asList(*ids))
+//        } else authorityRepository.deleteByIds(Arrays.asList(*ids))
 //    }
 }

@@ -27,7 +27,7 @@ interface AuthorityService {
      * @return 权限列表
      */
 //    fun findByRoleId(roleId: Long?): List<Authority?>?
-    fun findByRoleIds(roleIds: List<Long?>?): MutableList<Authority?>
+    fun findByRoleIds(roleIds: List<Long>): List<Authority>
 
     /**
      * 根据 authorityId 查询权限

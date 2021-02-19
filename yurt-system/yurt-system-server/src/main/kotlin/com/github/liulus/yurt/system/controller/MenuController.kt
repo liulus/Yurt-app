@@ -21,35 +21,35 @@ import javax.annotation.Resource
 @RequestMapping("/api")
 open class MenuController {
     @Resource
-    private val menuService: MenuService? = null
+    private lateinit var menuService: MenuService
 
     @GetMapping("/menu/tree")
-    fun menuTree(): List<MenuDTO.Detail?>? {
-        return menuService!!.buildMenuTree(false, false)
+    fun menuTree(): List<MenuDTO.Detail> {
+        return menuService.buildMenuTree(false, false)
     }
 
     @GetMapping("/my/menu")
-    fun myMenu(): List<MenuDTO.Detail?>? {
-        return menuService!!.buildMenuTree(true, true)
+    fun myMenu(): List<MenuDTO.Detail> {
+        return menuService.buildMenuTree(true, true)
     }
 
     @PostMapping("/menu")
     fun add(@RequestBody add: MenuDTO.Add?): Long? {
-        return menuService!!.insert(add)
+        return menuService.insert(add)
     }
 
     @PutMapping("/menu")
     fun update(@RequestBody update: MenuDTO.Update?): Int {
-        return menuService!!.update(update)
+        return menuService.update(update)
     }
 
     @PostMapping("/menu/change/status/{id}")
     fun changeStatus(@PathVariable id: Long?) {
-        menuService!!.changeStatus(id)
+        menuService.changeStatus(id)
     }
 
     @DeleteMapping("/menu/{id}")
     fun delete(@PathVariable id: Long?) {
-        menuService!!.delete(id)
+        menuService.delete(id)
     }
 }

@@ -24,7 +24,7 @@ interface MenuService {
      * @param filterEmpty    是否过滤子菜单为空并且没有url
      * @return Detail
      */
-    fun buildMenuTree(filterDisabled: Boolean, filterEmpty: Boolean): List<MenuDTO.Detail?>?
+    fun buildMenuTree(filterDisabled: Boolean, filterEmpty: Boolean): List<MenuDTO.Detail>
 
     /**
      * 增加菜单

@@ -22,13 +22,13 @@ import javax.annotation.Resource
 @Service
 open class RoleServiceImpl : RoleService {
     @Resource
-    private val roleRepository: RoleRepository? = null
+    private lateinit var roleRepository: RoleRepository
 
     @Resource
-    private val authorityRepository: AuthorityRepository? = null
+    private lateinit var authorityRepository: AuthorityRepository
 
     @Resource
-    private val userRoleRepository: UserRoleRepository? = null
+    private lateinit var userRoleRepository: UserRoleRepository
 
     @Resource
     private val roleAuthorityRepository: RoleAuthorityRepository? = null
@@ -38,7 +38,7 @@ open class RoleServiceImpl : RoleService {
     }
 
     override fun findById(roleId: Long?): Role? {
-        return roleRepository!!.selectById(roleId)
+        return roleRepository.selectById(roleId)
     }
 
     override fun findByCode(code: String?): Role? {
@@ -48,7 +48,7 @@ open class RoleServiceImpl : RoleService {
 
     override fun insert(role: Role?): Long? {
         checkCode(role!!.code)
-        roleRepository!!.insert(role)
+        roleRepository.insert(role)
         return role.id
     }
 
@@ -58,7 +58,7 @@ open class RoleServiceImpl : RoleService {
             .map(Role::code)
             .filter { code: String? -> code != role.code }
             .ifPresent { code: String? -> checkCode(code) }
-        roleRepository!!.updateIgnoreNull(role)
+        roleRepository.updateIgnoreNull(role)
     }
 
     private fun checkCode(code: String?) {
@@ -75,7 +75,7 @@ open class RoleServiceImpl : RoleService {
 //        if (ids == null || ids.size == 0) {
 //            return 0
 //        }
-//        val roles = roleRepository!!.selectByIds(Arrays.asList(*ids))
+//        val roles = roleRepository.selectByIds(Arrays.asList(*ids))
 //        val validIds: MutableList<Long?> = ArrayList(roles.size)
 //        for ((id, _, name) in roles) {
 ////            int count = roleRepository.countByProperty(Role::getId, role.getId());
@@ -125,11 +125,11 @@ open class RoleServiceImpl : RoleService {
 
 //    override fun bindUser(userId: Long?, roleIds: Array<Long?>?) {
 //        // 需要新增的有效 roleId
-//        val roles = roleRepository!!.selectByIds(Arrays.asList(*roleIds))
+//        val roles = roleRepository.selectByIds(Arrays.asList(*roleIds))
 //        val newRoleIds = roles.stream().map(Role::id).collect(Collectors.toList())
 //
 //        // 当前用户下的 旧的角色
-//        val oldRoles = userRoleRepository!!.selectByUserId(userId)
+//        val oldRoles = userroleRepository.selectByUserId(userId)
 //
 //        // 对比找出需删除的 用户角色Id
 //        oldRoles.asSequence().filter { newRoleIds.co }
@@ -155,8 +155,8 @@ open class RoleServiceImpl : RoleService {
 //        //        userRoleRepository.batchInsert(insertRoles);
 //    }
 
-    override fun findByUserId(userId: Long?): List<Role?>? {
-        return roleRepository!!.selectByUserId(userId)
+    override fun findByUserId(userId: Long): List<Role> {
+        return roleRepository.selectByUserId(userId)
     }
 
 //    override fun findAuthorityTree(roleId: Long?): List<AuthorityVo.TreeNode?>? {

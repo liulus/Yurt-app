@@ -35,7 +35,8 @@ class LoginUserService : UserDetailsService {
     private lateinit var authorityService: AuthorityService
 
     override fun loadUserByUsername(username: String): UserDetails {
-        val user = userService.findByUsername(username) ?: throw UsernameNotFoundException("用户 " + username + "不存在!")
+        val user = userService.findByUsername(username)
+            ?: throw UsernameNotFoundException("用户 " + username + "不存在!")
 
         // 构建 loginUser
         val loginUser = BeanUtils.convert(LoginUser::class.java, user)
@@ -56,14 +57,14 @@ class LoginUserService : UserDetailsService {
             loginUser.setAuthorities(auths)
             return loginUser
         }
-        val roles = roleService.findByUserId(user.id)
+        val roles = roleService.findByUserId(user.id!!)
         if (CollectionUtils.isEmpty(roles)) {
             return loginUser
         }
 
         // 查询用户权限
-        val roleAuthorities = authorityService.findByRoleIds(roles?.map { it?.id })
-//        loginUser.roles = roles
+        val roleAuthorities = authorityService.findByRoleIds(roles.map { it.id!! })
+        loginUser.roles = roles.map { it.code.toString() }
         val auths = roleAuthorities.asSequence().map { it?.code }
             .map { SimpleGrantedAuthority(it) }.toList()
         loginUser.setAuthorities(auths)

@@ -13,19 +13,23 @@ import com.github.liulus.yurt.system.model.entity.Authority
  * @version 1.0
  * created_at 2020/5/26
  */
-interface AuthorityRepository : JdbcRepository<Authority?> {
-    @Select(testWheres = [If(test = "roleIds != null and roleIds.size() > 0", value = "id in :roleIds")])
+interface AuthorityRepository : JdbcRepository<Authority> {
+    @Select(
+        testWheres = [
+            If(test = "roleIds != null and roleIds.size() > 0", value = "id in :roleIds")
+        ]
+    )
     fun selectPageList(qo: AuthorityQo): Page<Authority>
 
     @Select
     fun selectAll(): List<Authority>
 
     @Select(where = ["code = :param"])
-    fun selectByCode(code: String?): Authority?
+    fun selectByCode(code: String): Authority?
 
     @Select(columns = ["count(*)"], where = ["code = :param"])
-    fun countByCode(code: String?): Int
+    fun countByCode(code: String): Int
 
     @Delete(where = ["id in (:params)"])
-    fun deleteByIds(ids: List<Long?>?): Int
+    fun deleteByIds(ids: List<Long>): Int
 }
