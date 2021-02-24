@@ -106,9 +106,9 @@
 
   <script src="{{cdnHost}}/vue/2.6.10/vue.js"></script>
   <script src="{{cdnHost}}/yurt/yurt-ui-element.umd.js"></script>
-  <script src="/yurt/util.js"></script>
+  <script src="/yurt/tools.js"></script>
   <script>
-    new Vue({
+    window.app = new Vue({
       el: '#app',
       data: function () {
         return {
@@ -139,7 +139,7 @@
           })
         },
         doLogin() {
-          util.http.postForm('/login', this.dataForm).then((res) => {
+          Tools.http.postForm('/login', this.dataForm).then((res) => {
             if (res.access_token) {
               console.log(res.access_token)
               localStorage.setItem('access_token', res.access_token)

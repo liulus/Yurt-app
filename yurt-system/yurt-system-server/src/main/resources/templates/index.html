@@ -101,7 +101,7 @@
         })
         moduleRoutes.children = pluginRouteArray
 
-        window.vm = new Vue({
+        window.app = new Vue({
             router: new vueRouter({routes: [moduleRoutes]}),
         }).$mount('#app')
     })

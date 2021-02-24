@@ -4,40 +4,52 @@
         <el-breadcrumb-item>菜单管理</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main__bd">
-        <el-row :gutter="20">
-            <el-col :span="5">
-                <el-tree :data="menuTree" :props="{'label': 'name'}"
-                         node-key="id"
-                         :default-expanded-keys="[0]"
-                         :expand-on-click-node="false"
-                         @node-click="handleNodeClick"></el-tree>
+
+        <el-row>
+            <el-col :span="4">
+                <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('')"></el-button>
             </el-col>
-            <el-col :span="19">
-                <el-button type="primary" plain @click="editFormConfig.visible=true">+</el-button>
-                <el-table :data="menuList" width="100%">
-                    <el-table-column prop="code" label="编码"/>
-                    <el-table-column prop="name" label="名称"/>
-                    <el-table-column prop="url" label="名称"/>
-                    <el-table-column prop="icon" label="名称"/>
-                </el-table>
+            <el-col :span="12" :offset="2">
+                <el-input v-model="keyword" placeholder="请输入搜索内容" v-on:keyup.native.enter="handleSearch">
+                    <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+                </el-input>
             </el-col>
         </el-row>
+
+        <el-table :data="showData" row-key="id" :expand-row-keys="expandKeys" width="100%">
+            <el-table-column prop="code" label="编码"/>
+            <el-table-column prop="name" label="名称"/>
+            <el-table-column prop="url" label="名称"/>
+            <el-table-column prop="icon" label="名称"/>
+        </el-table>
     </div>
 
     <el-dialog :title="editFormConfig.title" :visible.sync="editFormConfig.visible" :close-on-click-modal="false">
-        <el-form :model="editForm">
-            <el-form-item label="活动名称" :label-width="editFormConfig.formLabelWidth">
-                <el-input v-model="editForm.name" autocomplete="off"></el-input>
+        <el-form :model="editForm" label-width="100px" label-suffix=":">
+            <el-form-item label="父节点" v-if="editFormConfig.isAdd">
+                <span>{{editFormConfig.parent}}</span>
             </el-form-item>
-            <el-form-item label="活动区域" :label-width="editFormConfig.formLabelWidth">
-                <el-select v-model="editForm.region" placeholder="请选择活动区域">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
+            <el-form-item label="编码">
+                <el-input v-model="editForm.code"></el-input>
+            </el-form-item>
+            <el-form-item label="名称">
+                <el-input v-model="editForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="图标">
+                <el-input v-model="editForm.icon"></el-input>
+            </el-form-item>
+            <el-form-item label="url">
+                <el-input v-model="editForm.url"></el-input>
+            </el-form-item>
+            <el-form-item label="顺序号">
+                <el-input v-model="editForm.orderNum" type="number"></el-input>
+            </el-form-item>
+            <el-form-item label="备注">
+                <el-input type="textarea" :rows="2" v-model="editForm.remark"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="t-center">
-            <el-button type="primary" @click="editFormConfig.visible = false">确 定</el-button>
+            <el-button type="primary" >确 定</el-button>
             <el-button @click="editFormConfig.visible = false">取 消</el-button>
         </div>
     </el-dialog>
