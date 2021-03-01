@@ -18,39 +18,38 @@ interface MenuService {
     fun findById(id: Long?): Menu?
 
     /**
-     * 构建菜单树
-     *
-     * @param filterDisabled 是否过滤禁用菜单
-     * @param filterEmpty    是否过滤子菜单为空并且没有url
+     * 查询所以的菜单,包含资源 并构建为树状结构
      * @return Detail
      */
-    fun buildMenuTree(filterDisabled: Boolean, filterEmpty: Boolean): List<MenuDTO.Detail>
+    fun buildAllMenuTree(): List<MenuDTO.Detail>
+
+    /**
+     * 查询用户的菜单
+     * @return Detail
+     */
+    fun findUserMenus(userId: Long): List<MenuDTO.Detail>
 
     /**
      * 增加菜单
-     *
      * @param add Menu
      */
-    fun insert(add: MenuDTO.Add?): Long?
+    fun insert(add: MenuDTO.Add): Long
 
     /**
      * 更新菜单
-     *
      * @param update Menu
      */
-    fun update(update: MenuDTO.Update?): Int
+    fun update(update: MenuDTO.Update): Int
 
     /**
      * 删除菜单
-     *
      * @param id id
      */
-    fun delete(id: Long?): Int
+    fun delete(id: Long): Int
 
     /**
      * 改变菜单状态, 启用->禁用, 禁用->启用
-     *
      * @param id id
      */
-    fun changeStatus(id: Long?)
+    fun changeStatus(id: Long)
 }

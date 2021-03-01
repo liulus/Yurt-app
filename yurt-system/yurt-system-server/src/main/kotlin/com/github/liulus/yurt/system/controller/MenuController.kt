@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.annotation.Resource
+import javax.validation.Valid
 
 /**
  * @author liulu
@@ -25,31 +26,31 @@ open class MenuController {
 
     @GetMapping("/menu/tree")
     fun menuTree(): List<MenuDTO.Detail> {
-        return menuService.buildMenuTree(false, false)
+        return menuService.buildAllMenuTree()
     }
 
     @GetMapping("/my/menu")
     fun myMenu(): List<MenuDTO.Detail> {
-        return menuService.buildMenuTree(true, true)
+        return menuService.findUserMenus(0L)
     }
 
     @PostMapping("/menu")
-    fun add(@RequestBody add: MenuDTO.Add?): Long? {
+    fun add(@RequestBody @Valid add: MenuDTO.Add): Long {
         return menuService.insert(add)
     }
 
     @PutMapping("/menu")
-    fun update(@RequestBody update: MenuDTO.Update?): Int {
+    fun update(@RequestBody @Valid update: MenuDTO.Update): Int {
         return menuService.update(update)
     }
 
     @PostMapping("/menu/change/status/{id}")
-    fun changeStatus(@PathVariable id: Long?) {
+    fun changeStatus(@PathVariable id: Long) {
         menuService.changeStatus(id)
     }
 
     @DeleteMapping("/menu/{id}")
-    fun delete(@PathVariable id: Long?) {
+    fun delete(@PathVariable id: Long) {
         menuService.delete(id)
     }
 }

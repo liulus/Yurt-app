@@ -38,7 +38,7 @@ open class RoleServiceImpl : RoleService {
     }
 
     override fun findById(roleId: Long?): Role? {
-        return roleRepository.selectById(roleId)
+        return roleRepository.selectById(roleId!!)
     }
 
     override fun findByCode(code: String?): Role? {

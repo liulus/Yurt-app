@@ -37,7 +37,7 @@ open class UserServiceImpl : UserService {
     }
 
     override fun findById(id: Long?): User? {
-        return userRepository!!.selectById(id)
+        return userRepository!!.selectById(id!!)
     }
 
     override fun findByUsername(username: String): User? {
@@ -119,6 +119,6 @@ open class UserServiceImpl : UserService {
     }
 
     override fun delete(id: Long?) {
-        userRepository!!.deleteById(id)
+        userRepository!!.deleteById(id!!)
     }
 }

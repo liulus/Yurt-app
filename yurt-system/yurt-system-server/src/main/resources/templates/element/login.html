@@ -140,14 +140,8 @@
         },
         doLogin() {
           Tools.http.postForm('/login', this.dataForm).then((res) => {
-            if (res.access_token) {
-              console.log(res.access_token)
-              localStorage.setItem('access_token', res.access_token)
-              // document.cookie = 'access_token=' + res.access_token
-              window.location.href = '/console'
-            } else {
-              this.$message.error(res.message)
-            }
+            localStorage.setItem('access_token', res.access_token)
+            window.location.href = '/console'
           })
         }
       }

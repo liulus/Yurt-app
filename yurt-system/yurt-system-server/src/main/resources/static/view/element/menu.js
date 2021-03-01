@@ -8,7 +8,6 @@ define(["text!/view/element/menu.html"], function (tmpl) {
                 expandKeys: [],
                 keyword: '',
                 editFormConfig: {
-                    formLabelWidth: '120px',
                     visible: false,
                     isAdd: true,
                     title: '',
@@ -29,42 +28,47 @@ define(["text!/view/element/menu.html"], function (tmpl) {
                     })
             },
             handleAdd(parentNode) {
-                this.editForm = {}
+                console.log(parentNode)
+                this.editForm = { type: 'menu' }
                 this.editFormConfig.title = '新增菜单'
-                this.editFormConfig.parent = parentNode ? parentNode.code + ' -- ' + parentNode.name : '--'
+                this.editFormConfig.parent = parentNode ? parentNode.name : '--'
                 this.editFormConfig.isAdd = true
                 this.editFormConfig.visible = true
                 this.editForm.parentId = parentNode ? parentNode.id : 0
             },
             handleEdit(node) {
-                this.editForm.id = node.id
-                this.editForm.code = node.code
-                this.editForm.name = node.name
-                this.editForm.url = node.url
-                this.editForm.icon = node.icon
-                this.editForm.orderNum = node.orderNum
-                this.editForm.remark = node.remark
-
+                this.editForm = node
                 this.editFormConfig.title = '修改菜单'
                 this.editFormConfig.isAdd = false
                 this.editFormConfig.visible = true
             },
             doEdit() {
-                let method = this.editFormConfig.isAdd ? 'post' : 'put'
-                Lit.httpRequest.request(method, '/api/menu', this.editForm).then(res => {
-                    if (res.success) {
-                        this.$message.success(this.editFormConfig.title + '成功')
-                        this.initData()
-                    } else {
-                        this.$message.error(res.message)
-                    }
+                let url = '/api/menu'
+                let editRes = this.editFormConfig.isAdd ? Tools.http.postJson(url, this.editForm)
+                    : Tools.http.putJson(url, this.editForm)
+                editRes.then(res => {
+                    this.$message.success(this.editFormConfig.title + '成功')
+                    this.initMenuTree()
                 })
                 this.editFormConfig.visible = false
             },
-            handleDelete(id) {
-
+            handleDelete(node) {
+                this.$confirm('确定删除菜单' + node.name, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    closeOnClickModal: false,
+                    type: 'warning'
+                }).then(_ => Tools.http.delete('/api/menu/' + node.id))
+                    .then(res => {
+                        this.$message.success('删除菜单成功')
+                        this.initMenuTree()
+                    })
             },
-            handleChange(id) {
+            handleChangeStatus(row, value) {
+                Tools.http.postJson('/api/menu/change/status/' + row.id)
+                    .then(res => {
+                        this.$message.success('更新状态成功')
+                    })
             },
             handleSearch() {
                 this.expandKeys = []
@@ -87,8 +91,7 @@ define(["text!/view/element/menu.html"], function (tmpl) {
             },
             isNodeMatch(keyword, item) {
                 if (keyword) {
-                    return (item.code && item.code.indexOf(keyword) !== -1)
-                        || (item.name && item.name.indexOf(keyword) !== -1)
+                    return (item.name && item.name.indexOf(keyword) !== -1)
                         || (item.remark && item.remark.indexOf(keyword) !== -1)
                 }
                 return true;

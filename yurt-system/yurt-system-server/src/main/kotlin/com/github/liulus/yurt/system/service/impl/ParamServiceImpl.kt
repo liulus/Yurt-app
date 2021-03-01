@@ -26,7 +26,7 @@ open class ParamServiceImpl : ParamService {
     }
 
     override fun findById(id: Long?): SysParam? {
-        return paramRepository!!.selectById(id)
+        return paramRepository!!.selectById(id!!)
     }
 
     override fun findByCode(code: String?): SysParam? {

@@ -31,10 +31,11 @@
             .then(res => (res.headers.get("content-type") || '').indexOf('application/json') >= 0 ? res.json() : res.text())
             .then(res => res.code == 'UN_LOGIN' ? window.location.href = '/login' : res)
             .then(res => {
-                if (!res.success) {
-                    window.app.$message.error(res.message)
+                if(res.success) {
+                    return res
                 }
-                return res
+                window.app.$message.error(res.message)
+                return Promise.reject(res)
             })
     }
 

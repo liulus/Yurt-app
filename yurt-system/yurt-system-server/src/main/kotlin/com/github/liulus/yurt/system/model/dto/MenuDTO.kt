@@ -1,6 +1,8 @@
 package com.github.liulus.yurt.system.model.dto
 
-import com.github.liulus.yurt.convention.data.PageQuery
+import javax.validation.constraints.Min
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 
 /**
  * User : liulu
@@ -9,44 +11,32 @@ import com.github.liulus.yurt.convention.data.PageQuery
  */
 object MenuDTO {
 
-    class Query : PageQuery() {
-        var enabled: Boolean? = null
-    }
+    data class Query(var enabled: Boolean? = null, var type: String? = null)
 
-    open class Base {
+    open class View {
+        var parentId: Long? = null
         var code: String? = null
+
+        @Size(min = 1, max = 30, message = "菜单名称长度 1-30 之间")
         var name: String? = null
         var icon: String? = null
         var url: String? = null
         var orderNum: Int? = null
+        var authCode: String? = null
         var type: String? = null
         var remark: String? = null
     }
 
-    class Detail : Base() {
-        var id: Long? = null
-        var parentId: Long? = null
-        var enabled: Boolean? = null
-        var isParent: Boolean? = null
+    data class Detail(
+        var id: Long? = null,
+        var enabled: Boolean? = null,
         var children: List<Detail>? = null
-    }
+    ) : View()
 
-
-    class Add : Base() {
-        var parentId: Long? = null
-    }
-
-
-    class Update : Base() {
+    class Add : View()
+    class Update : View() {
+        @NotNull(message = "id不能为空")
+        @Min(value = 1L, message = "id不正确")
         var id: Long? = null
-    }
-
-
-    class Tree {
-        var id: Long? = null
-        var parentId: Long? = null
-        var name: String? = null
-        var children: List<Tree?>? = null
-        var isParent: Boolean? = null
     }
 }
