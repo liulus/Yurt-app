@@ -24,24 +24,32 @@
             <el-table-column label="图标" width="70px" v-slot="{row}">
                 <i :class="row.icon"></i>
             </el-table-column>
-            <el-table-column label="顺序" prop="orderNum" width="70px"/>
-            <el-table-column prop="authCode" label="权限标识" min-width="120px"/>
-            <el-table-column label="url" prop="url" min-width="200px"/>
+            <el-table-column label="顺序" prop="orderNum" width="70px" />
+            <el-table-column prop="authCode" label="权限标识" min-width="120px" />
+            <el-table-column label="url" prop="url" min-width="200px" />
             <el-table-column label="状态" width="70px" v-slot="{row}">
-                <el-switch v-if="row.type==='menu'" v-model="row.enabled" @change="handleChangeStatus(row, $event)"/>
+                <el-switch v-if="row.type==='menu'" v-model="row.enabled" @change="handleChangeStatus(row, $event)" />
             </el-table-column>
             <el-table-column label="操作" min-width="120px" v-slot="{row}">
-                <el-link type="primary" icon="el-icon-plus" @click="handleAdd(row)"/>
-                <el-link class="ml-10" type="primary" icon="el-icon-edit" @click="handleEdit(row)"/>
-                <el-link class="ml-10" type="danger" icon="el-icon-delete" @click="handleDelete(row)"/>
+                <el-link type="primary" icon="el-icon-plus" @click="handleAdd(row)" />
+                <el-link class="ml-10" type="primary" icon="el-icon-edit" @click="handleEdit(row)" />
+                <el-link class="ml-10" type="danger" icon="el-icon-delete" @click="handleDelete(row)" />
             </el-table-column>
         </el-table>
     </div>
 
-    <el-dialog :title="editFormConfig.title" :visible.sync="editFormConfig.visible" :close-on-click-modal="false">
+    <el-dialog :title="editFormConfig.title" :visible.sync="editFormConfig.visible" width="660px" top="10vh"
+        :close-on-click-modal="false" @opened="handleEditFormOpened">
         <el-form :model="editForm" label-width="100px" label-suffix=":">
-            <el-form-item label="父节点" v-if="editFormConfig.isAdd">
-                <span>{{editFormConfig.parent}}</span>
+            <el-form-item label="父节点">
+                <span v-if="editFormConfig.isAdd">{{editFormConfig.parent}}</span>
+                <el-select ref="nodeSelect" v-else v-model="editFormConfig.parent" class="w-100">
+                    <el-option class="h-100 bg-white" :value="editForm.parentId" :label="editFormConfig.parent">
+                        <el-tree ref="updateTree" :data="[{id:0, name:'全部',children:menuList}]"
+                            :props="{label: 'name'}" node-key="id" :default-expanded-keys="[0]"
+                            :expand-on-click-node="false" @node-click="handleNodeClick" />
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="类型">
                 <el-radio-group v-model="editForm.type">

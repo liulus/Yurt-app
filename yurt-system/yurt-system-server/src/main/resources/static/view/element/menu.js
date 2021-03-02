@@ -28,7 +28,6 @@ define(["text!/view/element/menu.html"], function (tmpl) {
                     })
             },
             handleAdd(parentNode) {
-                console.log(parentNode)
                 this.editForm = { type: 'menu' }
                 this.editFormConfig.title = '新增菜单'
                 this.editFormConfig.parent = parentNode ? parentNode.name : '--'
@@ -42,6 +41,12 @@ define(["text!/view/element/menu.html"], function (tmpl) {
                 this.editFormConfig.isAdd = false
                 this.editFormConfig.visible = true
             },
+            handleEditFormOpened() {
+                if (!this.editFormConfig.isAdd) {
+                    var treeNode = this.$refs.updateTree.getNode(this.editForm.parentId)
+                    this.editFormConfig.parent = (treeNode && treeNode.data.name) || '--'
+                }
+            },
             doEdit() {
                 let url = '/api/menu'
                 let editRes = this.editFormConfig.isAdd ? Tools.http.postJson(url, this.editForm)
@@ -51,6 +56,11 @@ define(["text!/view/element/menu.html"], function (tmpl) {
                     this.initMenuTree()
                 })
                 this.editFormConfig.visible = false
+            },
+            handleNodeClick(nodeData) {
+                this.editFormConfig.parent = nodeData.name
+                this.editForm.parentId = nodeData.id
+                this.$refs.nodeSelect.blur()
             },
             handleDelete(node) {
                 this.$confirm('确定删除菜单' + node.name, '提示', {
