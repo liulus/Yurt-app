@@ -49,7 +49,6 @@ CREATE TABLE yurt_menu(
     icon          VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '菜单图标',
     url           VARCHAR(256)    DEFAULT ''         NOT NULL  COMMENT '链接',
     order_num     SMALLINT UNSIGNED    DEFAULT 0     NOT NULL  COMMENT '顺序号',
-    remark        VARCHAR(512)    DEFAULT ''         NOT NULL  COMMENT '备注',
     type          VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '菜单类型',
     is_enabled    TINYINT(1)      DEFAULT 1          NOT NULL  COMMENT '是否启用',
     auth_code     VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '权限码',
@@ -63,13 +62,7 @@ CREATE TABLE yurt_menu(
     COLLATE = utf8_unicode_ci
     COMMENT ='菜单表';
 
-CREATE INDEX uk_pid_code ON yurt_menu (parent_id, code);
-
-DELETE FROM yurt_dictionary WHERE dict_key LIKE 'menu_type%';
-
-INSERT INTO yurt_dictionary (parent_id, dict_key, dict_value, order_num, remark, is_system) VALUES (0, 'menu_type', '菜单类型', 1, '菜单类型', 1);
-INSERT INTO yurt_dictionary (parent_id, dict_key, dict_value, order_num, remark, is_system) VALUES (last_insert_id(), 'menu_type_top', '顶部导航菜单', 1, '顶部导航菜单', 1);
-INSERT INTO yurt_dictionary (parent_id, dict_key, dict_value, order_num, remark, is_system) VALUES (last_insert_id() - 1, 'menu_type_left', '左侧菜单', 2, '左侧菜单', 1);
+CREATE INDEX uk_pid_code ON yurt_menu (parent_id);
 
 -- user
 

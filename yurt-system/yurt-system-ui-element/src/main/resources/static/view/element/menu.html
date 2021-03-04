@@ -31,9 +31,9 @@
                 <el-switch v-if="row.type==='menu'" v-model="row.enabled" @change="handleChangeStatus(row, $event)" />
             </el-table-column>
             <el-table-column label="操作" min-width="120px" v-slot="{row}">
-                <el-link type="primary" icon="el-icon-plus" @click="handleAdd(row)" />
-                <el-link class="ml-10" type="primary" icon="el-icon-edit" @click="handleEdit(row)" />
-                <el-link class="ml-10" type="danger" icon="el-icon-delete" @click="handleDelete(row)" />
+                <el-link type="primary" icon="el-icon-plus" :underline="false" @click="handleAdd(row)" />
+                <el-link class="ml-10" type="primary" icon="el-icon-edit" :underline="false" @click="handleEdit(row)" />
+                <el-link class="ml-10" type="danger" icon="el-icon-delete" :underline="false" @click="handleDelete(row)" />
             </el-table-column>
         </el-table>
     </div>
@@ -72,14 +72,10 @@
             <el-form-item label="顺序号">
                 <el-input v-model="editForm.orderNum" type="number"></el-input>
             </el-form-item>
-            <el-form-item label="备注">
-                <el-input type="textarea" :rows="2" v-model="editForm.remark"></el-input>
-            </el-form-item>
         </el-form>
         <div slot="footer" class="t-center">
             <el-button @click="editFormConfig.visible = false">取 消</el-button>
             <el-button type="primary" @click="doEdit">确 定</el-button>
         </div>
     </el-dialog>
-
 </main>

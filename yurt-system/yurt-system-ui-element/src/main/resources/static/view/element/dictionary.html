@@ -1,0 +1,70 @@
+<main class="main">
+    <el-breadcrumb class="breadcrumb">
+        <el-breadcrumb-item>系统管理</el-breadcrumb-item>
+        <el-breadcrumb-item>
+            <span v-if="navData.length === 0">字典管理</span>
+            <el-link v-else type="primary" :underline="false" @click="handleNavClick({id: 0, idx:-1})">字典管理</el-link>
+        </el-breadcrumb-item>
+        <el-breadcrumb-item v-for="(item, idx) in navData" :key="item.id">
+            <span v-if="idx === navData.length - 1">{{item.dictValue}}</span>
+            <el-link v-else type="primary" :underline="false" @click="handleNavClick(item)">{{item.dictValue}}</el-link>
+        </el-breadcrumb-item>
+    </el-breadcrumb>
+    <div class="main__bd">
+        <el-row>
+            <el-col :span="4">
+                <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd"></el-button>
+            </el-col>
+            <el-col :span="12" :offset="2">
+                <el-input v-model="keyword" placeholder="请输入搜索内容" v-on:keyup.native.enter="handleSearch">
+                    <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+                </el-input>
+            </el-col>
+        </el-row>
+
+        <el-table :border="true" :data="page.results" row-key="id" width="100%">
+            <el-table-column label="顺序" prop="orderNum" width="70px" />
+            <el-table-column label="字典key" min-width="150px" v-slot="{row}">
+                <el-link type="primary" :underline="false" @click="handleRowClick(row)">{{row.dictKey}}</el-link>
+            </el-table-column>
+            <el-table-column label="字典值" prop="dictValue" min-width="150px" />
+            <el-table-column label="备注" prop="remark" min-width="160px" />
+            <el-table-column label="创建时间" prop="gmtCreated" min-width="160px" />
+            <el-table-column label="操作" min-width="100px" v-slot="{row}">
+                <el-link type="primary" icon="el-icon-edit" :underline="false" @click="handleEdit(row)"/>
+                <el-link class="ml-10" type="danger" icon="el-icon-delete" :underline="false" />
+            </el-table-column>
+        </el-table>
+        <el-pagination layout="total, prev, pager, next" :current-page.sync="queryForm.pageNum"
+            :page-size="queryForm.pageSize" :total="page.totalRecords" @current-change="handlePageNumChange"
+            @prev-click="handlePageNumChange(queryForm.pageNum - 1)"
+            @next-click="handlePageNumChange(queryForm.pageNum + 1)">
+        </el-pagination>
+    </div>
+
+    <!-- 编辑弹框 -->
+    <el-dialog :title="editFormConfig.title" :visible.sync="editFormConfig.visible" width="660px" top="10vh"
+        :close-on-click-modal="false">
+        <el-form :model="editForm" label-width="100px" label-suffix=":">
+            <el-form-item label="父节点">
+                <span>{{editFormConfig.parent}}</span>
+            </el-form-item>
+            <el-form-item label="字典key">
+                <el-input v-model="editForm.dictKey"></el-input>
+            </el-form-item>
+            <el-form-item label="字典值">
+                <el-input v-model="editForm.dictValue"></el-input>
+            </el-form-item>
+            <el-form-item label="顺序号">
+                <el-input v-model="editForm.orderNum" type="number"></el-input>
+            </el-form-item>
+            <el-form-item label="备注">
+                <el-input v-model="editForm.remark"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="t-center">
+            <el-button @click="editFormConfig.visible = false">取 消</el-button>
+            <el-button type="primary" @click="doEdit">确 定</el-button>
+        </div>
+    </el-dialog>
+</main>

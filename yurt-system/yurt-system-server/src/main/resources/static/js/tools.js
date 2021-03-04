@@ -42,7 +42,7 @@
     function formParam(params) {
         var paramArray = [];
         for (var key in params) {
-            if (params[key]) {
+            if (params[key] || params[key] === 0) {
                 paramArray.push(key + '=' + params[key])
             }
         }

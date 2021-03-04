@@ -1,7 +1,7 @@
 package com.github.liulus.yurt.system.service
 
 import com.github.liulus.yurt.convention.data.Page
-import com.github.liulus.yurt.system.model.dto.DictionaryQo
+import com.github.liulus.yurt.system.model.dto.DictDTO
 import com.github.liulus.yurt.system.model.dto.DictionaryVo
 import com.github.liulus.yurt.system.model.entity.Dictionary
 
@@ -13,10 +13,9 @@ import com.github.liulus.yurt.system.model.entity.Dictionary
 interface DictionaryService {
     /**
      * 添加字典对象
-     *
-     * @param dictionary Dictionary
+     * @param add Dictionary
      */
-    fun insert(dictionary: DictionaryVo.Add?): Long?
+    fun insert(add: DictDTO.Detail): Long
 
     /**
      * 更新字典对象
@@ -35,11 +34,10 @@ interface DictionaryService {
 
     /**
      * 根据查询对象查询 字典列表
-     *
-     * @param qo 查询对象
+     * @param query 查询对象
      * @return Dictionary
      */
-    fun findPageList(qo: DictionaryQo?): Page<DictionaryVo.Detail?>?
+    fun findPageList(query: DictDTO.Query): Page<DictDTO.Detail>
 
     /**
      * 构建字典的层级

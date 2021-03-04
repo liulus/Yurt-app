@@ -36,7 +36,7 @@ define(["text!/view/element/menu.html"], function (tmpl) {
                 this.editForm.parentId = parentNode ? parentNode.id : 0
             },
             handleEdit(node) {
-                this.editForm = node
+                this.editForm = Object.assign({}, node)
                 this.editFormConfig.title = '修改菜单'
                 this.editFormConfig.isAdd = false
                 this.editFormConfig.visible = true
@@ -63,6 +63,10 @@ define(["text!/view/element/menu.html"], function (tmpl) {
                 this.$refs.nodeSelect.blur()
             },
             handleDelete(node) {
+                if (node.children && node.children.length > 0) {
+                    this.$message.error(node.name + '存在子节点, 无法删除')
+                    return
+                }
                 this.$confirm('确定删除菜单' + node.name, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

@@ -15,7 +15,7 @@ interface MenuService {
      * @param id 主键
      * @return 菜单
      */
-    fun findById(id: Long?): Menu?
+    fun findById(id: Long): Menu?
 
     /**
      * 查询所以的菜单,包含资源 并构建为树状结构
