@@ -2,7 +2,6 @@ package com.github.liulus.yurt.system.service.impl
 
 import com.github.liulus.yurt.convention.bean.BeanUtils
 import com.github.liulus.yurt.convention.data.Page
-import com.github.liulus.yurt.convention.exception.ServiceException
 import com.github.liulus.yurt.convention.util.Pages
 import com.github.liulus.yurt.system.model.dto.DictDTO
 import com.github.liulus.yurt.system.model.dto.DictionaryVo
@@ -28,26 +27,36 @@ open class DictionaryServiceImpl : DictionaryService {
     private lateinit var dictionaryRepository: DictionaryRepository
 
     override fun insert(add: DictDTO.Detail): Long {
+        checkDictKey(add.dictKey, add.parentId)
         val dict = BeanUtils.convert(Dictionary::class.java, add)
-        checkDictKey(dict.dictKey, dict.parentId)
         dict.system = false
-        if (dict.orderNum == null) {
-            dict.orderNum = 0
-        }
+        dict.orderNum = dict.orderNum ?: 0
         return dictionaryRepository.insert(dict)
     }
 
-    override fun update(update: DictionaryVo.Update?): Int {
-        val dictionary = BeanUtils.convert(update, Dictionary())
-        val (_, _, dictKey, _, _, _, system) = findById(dictionary.id) ?: return 0
-        if (dictionary.dictKey != dictKey) {
-            if (system!!) {
-                throw ServiceException(String.format("%s 是系统级字典, 不允许修改", dictKey))
-            }
-            checkDictKey(dictionary.dictKey, dictionary.parentId)
+    override fun update(update: DictDTO.Detail): Int {
+        val id = update.id
+        requireNotNull(id) { "更新数据id必填" }
+        val old = dictionaryRepository.selectById(id)
+        checkNotNull(old) { "id $id 对应的记录不存在" }
+        if (update.dictKey != old.dictKey) {
+            checkDictKey(update.dictKey, old.parentId)
         }
-        return dictionaryRepository.updateIgnoreNull(dictionary)
+        val dict = BeanUtils.convert(Dictionary::class.java, update)
+        return dictionaryRepository.updateIgnoreNull(dict)
     }
+
+//    override fun update(update: DictionaryVo.Update?): Int {
+//        val dictionary = BeanUtils.convert(update, Dictionary())
+//        val (_, _, dictKey, _, _, _, system) = findById(dictionary.id) ?: return 0
+//        if (dictionary.dictKey != dictKey) {
+//            if (system!!) {
+//                throw ServiceException(String.format("%s 是系统级字典, 不允许修改", dictKey))
+//            }
+//            checkDictKey(dictionary.dictKey, dictionary.parentId)
+//        }
+//        return dictionaryRepository.updateIgnoreNull(dictionary)
+//    }
 
     private fun checkDictKey(dictKey: String?, parentId: Long?) {
         require(!dictKey.isNullOrEmpty()) { "字典key不能为空" }

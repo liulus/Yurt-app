@@ -23,28 +23,28 @@
         </el-row>
 
         <el-table :border="true" :data="page.results" row-key="id" width="100%">
-            <el-table-column label="顺序" prop="orderNum" width="70px" />
+            <el-table-column label="顺序" prop="orderNum" width="70px"/>
             <el-table-column label="字典key" min-width="150px" v-slot="{row}">
                 <el-link type="primary" :underline="false" @click="handleRowClick(row)">{{row.dictKey}}</el-link>
             </el-table-column>
-            <el-table-column label="字典值" prop="dictValue" min-width="150px" />
-            <el-table-column label="备注" prop="remark" min-width="160px" />
-            <el-table-column label="创建时间" prop="gmtCreated" min-width="160px" />
+            <el-table-column label="字典值" prop="dictValue" min-width="150px"/>
+            <el-table-column label="备注" prop="remark" min-width="160px"/>
+            <el-table-column label="创建时间" prop="gmtCreated" min-width="160px"/>
             <el-table-column label="操作" min-width="100px" v-slot="{row}">
                 <el-link type="primary" icon="el-icon-edit" :underline="false" @click="handleEdit(row)"/>
-                <el-link class="ml-10" type="danger" icon="el-icon-delete" :underline="false" />
+                <el-link class="ml-10" type="danger" icon="el-icon-delete" :underline="false"/>
             </el-table-column>
         </el-table>
         <el-pagination layout="total, prev, pager, next" :current-page.sync="queryForm.pageNum"
-            :page-size="queryForm.pageSize" :total="page.totalRecords" @current-change="handlePageNumChange"
-            @prev-click="handlePageNumChange(queryForm.pageNum - 1)"
-            @next-click="handlePageNumChange(queryForm.pageNum + 1)">
+                       :page-size="queryForm.pageSize" :total="page.totalRecords" @current-change="handlePageNumChange"
+                       @prev-click="handlePageNumChange(queryForm.pageNum - 1)"
+                       @next-click="handlePageNumChange(queryForm.pageNum + 1)">
         </el-pagination>
     </div>
 
     <!-- 编辑弹框 -->
     <el-dialog :title="editFormConfig.title" :visible.sync="editFormConfig.visible" width="660px" top="10vh"
-        :close-on-click-modal="false">
+               :close-on-click-modal="false">
         <el-form :model="editForm" label-width="100px" label-suffix=":">
             <el-form-item label="父节点">
                 <span>{{editFormConfig.parent}}</span>
@@ -59,7 +59,7 @@
                 <el-input v-model="editForm.orderNum" type="number"></el-input>
             </el-form-item>
             <el-form-item label="备注">
-                <el-input v-model="editForm.remark"></el-input>
+                <el-input type="textarea" v-model="editForm.remark"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="t-center">

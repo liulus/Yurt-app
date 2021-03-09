@@ -28,11 +28,11 @@ object DictDTO {
         @NotNull
         var parentId: Long? = null
 
-        @NotBlank
+        @NotBlank(message = "字典key不能为空")
         @Size(min = 1, max = 30, message = "字典key长度在1-30之间")
         var dictKey: String? = null
 
-        @NotBlank
+        @NotBlank(message = "字典值不能为空")
         @Size(min = 1, max = 30, message = "字典值长度在1-30之间")
         var dictValue: String? = null
         var orderNum: Int? = null

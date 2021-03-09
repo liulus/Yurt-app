@@ -34,9 +34,10 @@ define(["text!/view/element/dictionary.html"], function (tmpl) {
 
             },
             handleAdd() {
-                this.editForm = { parentId: 0 }
+                this.editForm = { parentId: this.queryForm.parentId }
                 this.editFormConfig.title = '新增字典'
-                this.editFormConfig.parent = '--'
+                var len = this.navData.length
+                this.editFormConfig.parent = len > 0 ? this.navData[len - 1].dictKey : '--'
                 this.editFormConfig.isAdd = true
                 this.editFormConfig.visible = true
             },

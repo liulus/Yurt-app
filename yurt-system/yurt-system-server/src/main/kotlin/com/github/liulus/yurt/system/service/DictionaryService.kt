@@ -19,10 +19,9 @@ interface DictionaryService {
 
     /**
      * 更新字典对象
-     *
-     * @param dictionary Dictionary
+     * @param update Dictionary
      */
-    fun update(dictionary: DictionaryVo.Update?): Int
+    fun update(update: DictDTO.Detail): Int
 
     /**
      * 根据 Id 查询字典对象

@@ -24,7 +24,7 @@ interface DictionaryRepository : JdbcRepository<Dictionary> {
         testWheres = [
             If(test = "parentId != null", value = "parent_id = :parentId"),
             If(test = "keyword != null && type != ''", value = "dict_key like :keyword")
-        ], where = ["is_deleted = 0"], isPageQuery = true
+        ], where = ["is_deleted = 0"]
     )
     fun selectByQuery(query: DictDTO.Query): List<Dictionary>
 
