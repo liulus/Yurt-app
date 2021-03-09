@@ -1,45 +1,3 @@
--- dictionary
-DROP TABLE IF EXISTS yurt_dictionary;
-CREATE TABLE yurt_dictionary(
-    id       INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL  COMMENT '字典Id',
-    parent_id     INT UNSIGNED    DEFAULT 0          NOT NULL  COMMENT '上级字典Id',
-    dict_key      VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '字典key',
-    dict_value    VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '字典值',
-    order_num     SMALLINT UNSIGNED    DEFAULT 0     NOT NULL  COMMENT '顺序号',
-    remark        VARCHAR(256)    DEFAULT ''         NOT NULL  COMMENT '备注',
-    is_system     TINYINT(1)      DEFAULT 0          NOT NULL  COMMENT '是否系统级',
-    is_deleted    TINYINT(1)      DEFAULT 0          NOT NULL  COMMENT '是否删除',
-    gmt_created   DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  COMMENT '创建时间',
-    gmt_modified  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    gmt_deleted   DATETIME DEFAULT '2000-01-01'      NOT NULL  COMMENT '删除时间'
-)
-    ENGINE = InnoDB
-    DEFAULT CHARSET = utf8
-    COLLATE = utf8_unicode_ci
-    COMMENT = '字典表';
-
-CREATE UNIQUE INDEX uk_pid_key ON yurt_dictionary (parent_id, dict_key);
-
--- param
-DROP TABLE IF EXISTS yurt_param;
-CREATE TABLE yurt_param(
-    id       INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL  COMMENT '参数Id',
-    code          VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '参数编码',
-    value         VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '参数值',
-    remark        VARCHAR(256)    DEFAULT ''         NOT NULL  COMMENT '备注',
-    is_system     TINYINT(1)      DEFAULT 0          NOT NULL  COMMENT '是否系统级',
-    is_deleted    TINYINT(1)      DEFAULT 0          NOT NULL  COMMENT '是否删除',
-    gmt_created   DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  COMMENT '创建时间',
-    gmt_modified  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    gmt_deleted   DATETIME DEFAULT '2000-01-01'      NOT NULL  COMMENT '删除时间'
-)
-    ENGINE = InnoDB
-    DEFAULT CHARSET = utf8
-    COLLATE = utf8_unicode_ci
-    COMMENT = '参数表';
-
-CREATE UNIQUE INDEX uk_code ON yurt_param (code);
-
 -- menu
 DROP TABLE IF EXISTS yurt_menu;
 CREATE TABLE yurt_menu(
@@ -59,10 +17,74 @@ CREATE TABLE yurt_menu(
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8
-    COLLATE = utf8_unicode_ci
+    COLLATE = utf8_general_ci
     COMMENT ='菜单表';
+CREATE INDEX idx_name ON yurt_menu(name);
 
-CREATE INDEX uk_pid_code ON yurt_menu (parent_id);
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (1, 0, '系统管理', 'el-icon-setting', '', 3, 'menu', true, 'sys');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (2, 1, '字典管理', '', '/dictionary/index', 9, 'menu', true, 'sys.dictionary');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (3, 1, '菜单管理', '', '/menu/index', 3, 'menu', true, 'sys.menu');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (4, 1, '参数管理', 'fa-wrench', '/param/index', 10, 'menu', true, 'sys.param');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (5, 1, '用户管理', 'el-icon-user', '/plugin/user', 1, 'menu', true, 'view_user');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (6, 1, '组织管理', 'fa-sitemap', '/plugin/org', 6, 'menu', true, 'view_org');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (7, 1, '角色管理', 'fa-lock', '/role/index', 4, 'menu', true, 'sys.role');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (8, 1, '权限管理', '', '/authority/index', 15, 'menu', true, 'sys.authority');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (12, 0, '组织机构', 'el-icon-user', '', 6, 'menu', true, '');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (13, 3, '新增菜单', '', '', 1, 'button', true, 'sys.menu.view');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (14, 0, '点外卖', 'el-icon-eleme', '', 3, 'menu', true, 'ele');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (15, 0, '点外卖', 'el-icon-eleme', '/element', 10, 'menu', true, 'ele');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (16, 15, '饿了吗', '', '/element', 2, 'menu', true, 'wai.element');
+INSERT INTO yurt_menu (id, parent_id, name, icon, url, order_num, type, is_enabled, auth_code) VALUES (17, 0, 'wailian', 'el-icon-paperclip', '/test', 7, 'menu', true, '');
+
+
+-- dictionary
+DROP TABLE IF EXISTS yurt_dictionary;
+CREATE TABLE yurt_dictionary(
+    id       INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL  COMMENT '字典Id',
+    parent_id     INT UNSIGNED    DEFAULT 0          NOT NULL  COMMENT '上级字典Id',
+    dict_key      VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '字典key',
+    dict_value    VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '字典值',
+    order_num     SMALLINT UNSIGNED    DEFAULT 0     NOT NULL  COMMENT '顺序号',
+    remark        VARCHAR(256)    DEFAULT ''         NOT NULL  COMMENT '备注',
+    is_deleted    TINYINT(1)      DEFAULT 0          NOT NULL  COMMENT '是否删除',
+    gmt_created   DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  COMMENT '创建时间',
+    gmt_modified  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    gmt_deleted   DATETIME DEFAULT '2000-01-01'      NOT NULL  COMMENT '删除时间'
+)
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8
+    COLLATE = utf8_general_ci
+    COMMENT = '字典表';
+
+CREATE INDEX uk_key_pid ON yurt_dictionary (dict_key, parent_id);
+
+INSERT INTO yurt_dictionary (id, parent_id, dict_key, dict_value, order_num, remark) VALUES (1, 0, 'menu_type', '菜单类型', 1, '菜单类型');
+INSERT INTO yurt_dictionary (id, parent_id, dict_key, dict_value, order_num, remark) VALUES (2, 1, 'menu_type_top', '顶部导航菜单', 1, '顶部导航菜单');
+INSERT INTO yurt_dictionary (id, parent_id, dict_key, dict_value, order_num, remark) VALUES (3, 1, 'menu_type_left', '左侧菜单', 2, '左侧菜单');
+INSERT INTO yurt_dictionary (id, parent_id, dict_key, dict_value, order_num, remark) VALUES (4, 0, 'gender', '性别', 2, '');
+INSERT INTO yurt_dictionary (id, parent_id, dict_key, dict_value, order_num, remark) VALUES (5, 4, 'male', '男', 1, '');
+INSERT INTO yurt_dictionary (id, parent_id, dict_key, dict_value, order_num, remark) VALUES (6, 4, 'female', '女', 4, '');
+
+
+-- param
+DROP TABLE IF EXISTS yurt_param;
+CREATE TABLE yurt_param(
+    id       INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL  COMMENT '参数Id',
+    code          VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '参数编码',
+    value         VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '参数值',
+    remark        VARCHAR(256)    DEFAULT ''         NOT NULL  COMMENT '备注',
+    is_system     TINYINT(1)      DEFAULT 0          NOT NULL  COMMENT '是否系统级',
+    is_deleted    TINYINT(1)      DEFAULT 0          NOT NULL  COMMENT '是否删除',
+    gmt_created   DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  COMMENT '创建时间',
+    gmt_modified  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    gmt_deleted   DATETIME DEFAULT '2000-01-01'      NOT NULL  COMMENT '删除时间'
+)
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8
+    COLLATE = utf8_general_ci
+    COMMENT = '参数表';
+
+CREATE UNIQUE INDEX uk_code ON yurt_param (code);
 
 -- user
 
@@ -86,7 +108,7 @@ CREATE TABLE yurt_organization (
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8
-    COLLATE = utf8_unicode_ci
+    COLLATE = utf8_general_ci
     COMMENT = '机构表';
 
 CREATE INDEX uk_code
@@ -123,7 +145,7 @@ CREATE TABLE yurt_user(
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8
-    COLLATE = utf8_unicode_ci
+    COLLATE = utf8_general_ci
     COMMENT = '用户表';
 
 CREATE UNIQUE INDEX uk_name
@@ -150,7 +172,7 @@ CREATE TABLE yurt_authority(
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8
-    COLLATE = utf8_unicode_ci
+    COLLATE = utf8_general_ci
     COMMENT ='权限码';
 
 CREATE UNIQUE INDEX uk_code ON yurt_authority (code);
@@ -167,7 +189,7 @@ CREATE TABLE yurt_role (
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8
-    COLLATE = utf8_unicode_ci
+    COLLATE = utf8_general_ci
     COMMENT ='角色';
 
 CREATE UNIQUE INDEX uk_code ON yurt_role (code);
@@ -203,27 +225,6 @@ CREATE TABLE yurt_user_role (
     COMMENT ='用户角色关联表';
 CREATE UNIQUE INDEX uk_user_role
     ON yurt_user_role (user_id, role_id);
-
-DELETE FROM yurt_menu WHERE code LIKE 'system%';
-
-INSERT INTO yurt_menu (parent_id, code, name, icon, url, order_num, type, auth_code)
-VALUES (0, 'system', '系统管理', 'fa-cog', '', 1, 'menu_type_left', '');
-INSERT INTO yurt_menu (parent_id, code, name, icon, url, order_num, type, auth_code)
-VALUES (last_insert_id(), 'system_dictionary', '字典管理', 'fa-book', '/plugin/dictionary', 3, 'menu_type_left',
-        'view_dictionary');
-INSERT INTO yurt_menu (parent_id, code, name, icon, url, order_num, type, auth_code)
-VALUES (last_insert_id() - 1, 'system_menu', '菜单管理', 'fa-list-ul', '/plugin/menu', 1, 'menu_type_left', 'view_menu');
-INSERT INTO yurt_menu (parent_id, code, name, icon, url, order_num, type, auth_code)
-VALUES (last_insert_id() - 2, 'system_param', '参数管理', 'fa-wrench', '/plugin/param', 2, 'menu_type_left', 'view_param');
-INSERT INTO yurt_menu (parent_id, code, name, icon, url, order_num, type, auth_code)
-VALUES (last_insert_id() - 3, 'system_user', '用户管理', 'fa-user', '/plugin/user', 5, 'menu_type_left', 'view_user');
-INSERT INTO yurt_menu (parent_id, code, name, icon, url, order_num, type, auth_code)
-VALUES (last_insert_id() - 4, 'system_organization', '组织管理', 'fa-sitemap', '/plugin/org', 4, 'menu_type_left', 'view_org');
-INSERT INTO yurt_menu (parent_id, code, name, icon, url, order_num, type, auth_code)
-VALUES (last_insert_id() - 5, 'system_role', '角色管理', 'fa-lock', '/plugin/role', 6, 'menu_type_left', 'view_role');
-INSERT INTO yurt_menu (parent_id, code, name, icon, url, order_num, type, auth_code)
-VALUES (last_insert_id() - 6, 'system_authority', '权限管理', 'fa-key', '/plugin/authority', 7, 'menu_type_left',
-        'view_authority');
 
 
 DELETE FROM yurt_authority;

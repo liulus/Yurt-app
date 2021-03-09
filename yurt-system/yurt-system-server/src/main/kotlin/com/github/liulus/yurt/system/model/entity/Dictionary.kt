@@ -13,18 +13,16 @@ import javax.persistence.Table
  */
 @Table(name = SystemConst.TABLE_PREFIX + "dictionary")
 data class Dictionary(
-        var id: Long? = null,
-        var parentId: Long? = null,
-        var dictKey: String? = null,
-        var dictValue: String? = null,
-        var orderNum: Int? = null,
-        var remark: String? = null,
+    var id: Long? = null,
+    var parentId: Long? = null,
+    var dictKey: String? = null,
+    var dictValue: String? = null,
+    var orderNum: Int? = null,
+    var remark: String? = null,
 
-        @Column(name = "is_system")
-        var system: Boolean? = null,
-        @Column(name = "is_deleted")
-        var deleted: Boolean? = null,
-        var gmtCreated: LocalDateTime? = null,
-        var gmtModified: LocalDateTime? = null,
-        var gmtDeleted: LocalDateTime? = null,
+    @Column(name = "is_deleted")
+    var deleted: Boolean? = null,
+    var gmtCreated: LocalDateTime? = null,
+    var gmtModified: LocalDateTime? = null,
+    var gmtDeleted: LocalDateTime? = null,
 )

@@ -12,7 +12,5 @@ object SystemConst {
 
     const val MENU_TYPE_MENU = "menu"
     const val MENU_TYPE_BUTTON = "button"
-
-
-
+    const val NOT_DELETED = "is_deleted = 0"
 }

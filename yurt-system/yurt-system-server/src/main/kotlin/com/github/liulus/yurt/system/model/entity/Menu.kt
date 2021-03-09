@@ -13,22 +13,20 @@ import javax.persistence.Table
  */
 @Table(name = SystemConst.TABLE_PREFIX + "menu")
 data class Menu(
-        var id: Long? = null,
-        var parentId: Long? = null,
-        var code: String? = null,
-        var name: String? = null,
-        var url: String? = null,
-        var icon: String? = null,
-        var orderNum: Int? = null,
-        var remark: String? = null,
-        var type: String? = null,
-        var authCode: String? = null,
+    var id: Long? = null,
+    var parentId: Long? = null,
+    var name: String? = null,
+    var url: String? = null,
+    var icon: String? = null,
+    var orderNum: Int? = null,
+    var type: String? = null,
+    var authCode: String? = null,
 
-        @Column(name = "is_enabled")
-        var enabled: Boolean? = null,
-        @Column(name = "is_deleted")
-        var deleted: Boolean? = null,
-        var gmtCreated: LocalDateTime? = null,
-        var gmtModified: LocalDateTime? = null,
-        var gmtDeleted: LocalDateTime? = null,
+    @Column(name = "is_enabled")
+    var enabled: Boolean? = null,
+    @Column(name = "is_deleted")
+    var deleted: Boolean? = null,
+    var gmtCreated: LocalDateTime? = null,
+    var gmtModified: LocalDateTime? = null,
+    var gmtDeleted: LocalDateTime? = null,
 )

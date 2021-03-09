@@ -15,7 +15,6 @@ object MenuDTO {
 
     open class View {
         var parentId: Long? = null
-        var code: String? = null
 
         @Size(min = 1, max = 30, message = "菜单名称长度 1-30 之间")
         var name: String? = null

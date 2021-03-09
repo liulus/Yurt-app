@@ -60,6 +60,7 @@ open class MenuServiceImpl : MenuService {
     }
 
     override fun insert(add: MenuDTO.Add): Long {
+        checkName(add.name)
         val menu = BeanUtils.convert(Menu::class.java, add)
         menu.enabled = true
         return menuRepository.insert(menu)
@@ -70,8 +71,17 @@ open class MenuServiceImpl : MenuService {
         requireNotNull(id) { "id不能为空" }
         val oldMenu = menuRepository.selectById(id)
         checkNotNull(oldMenu) { "菜单id $id 不存在" }
+        if (update.name != oldMenu.name) {
+            checkName(update.name)
+        }
         val upMenu = BeanUtils.convert(Menu::class.java, update)
         return menuRepository.updateIgnoreNull(upMenu)
+    }
+
+    private fun checkName(name: String?) {
+        requireNotNull(name) { "菜单名称不能为空" }
+        val menu = menuRepository.selectByName(name)
+        check(menu == null) { "菜单名称 $name 已存在" }
     }
 
     override fun delete(id: Long): Int {

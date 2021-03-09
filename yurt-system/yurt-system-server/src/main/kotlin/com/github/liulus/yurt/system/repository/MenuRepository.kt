@@ -3,6 +3,7 @@ package com.github.liulus.yurt.system.repository
 import com.github.liulus.yurt.jdbc.JdbcRepository
 import com.github.liulus.yurt.jdbc.annotation.If
 import com.github.liulus.yurt.jdbc.annotation.Select
+import com.github.liulus.yurt.system.context.SystemConst
 import com.github.liulus.yurt.system.model.dto.MenuDTO
 import com.github.liulus.yurt.system.model.entity.Menu
 
@@ -13,8 +14,11 @@ import com.github.liulus.yurt.system.model.entity.Menu
  */
 interface MenuRepository : JdbcRepository<Menu> {
 
+    @Select(where = ["name = :param", SystemConst.NOT_DELETED])
+    fun selectByName(name: String): Menu?
+
     @Select(
-        where = ["is_deleted = 0"],
+        where = [SystemConst.NOT_DELETED],
         testWheres = [
             If(test = "enabled != null", value = "is_enabled = :enabled"),
             If(test = "type != null && type != ''", value = "type = :type")
@@ -22,6 +26,6 @@ interface MenuRepository : JdbcRepository<Menu> {
     )
     fun selectByQuery(query: MenuDTO.Query): List<Menu>
 
-    @Select(columns = ["count(*)"], where = ["parent_id = :param"])
+    @Select(columns = ["count(*)"], where = ["parent_id = :param", SystemConst.NOT_DELETED])
     fun countByParentId(parentId: Long): Int
 }

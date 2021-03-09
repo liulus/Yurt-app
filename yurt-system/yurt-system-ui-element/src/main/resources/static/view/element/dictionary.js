@@ -61,8 +61,8 @@ define(["text!/view/element/dictionary.html"], function (tmpl) {
                 this.queryForm.parentId = row.id
                 var navItem = Object.assign({}, row)
                 navItem.idx = this.navData.length
-                this.navData.push(navItem)
                 this.initData()
+                this.navData.push(navItem)
             },
             handleNavClick(row) {
                 this.queryForm.parentId = row.id
@@ -76,6 +76,18 @@ define(["text!/view/element/dictionary.html"], function (tmpl) {
             handlePageNumChange(pageNum) {
                 this.queryForm.pageNum = pageNum
                 this.initData()
+            },
+            handleDelete(node) {
+                this.$confirm('确定删除字典' + node.dictKey, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    closeOnClickModal: false,
+                    type: 'warning'
+                }).then(_ => Tools.http.delete('/api/dict/' + node.id))
+                    .then(res => {
+                        this.$message.success('删除字典成功')
+                        this.initData()
+                    })
             }
         }
     }

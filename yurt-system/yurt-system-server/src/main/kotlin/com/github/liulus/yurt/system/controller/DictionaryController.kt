@@ -3,7 +3,9 @@ package com.github.liulus.yurt.system.controller
 import com.github.liulus.yurt.convention.data.Page
 import com.github.liulus.yurt.system.model.dto.DictDTO
 import com.github.liulus.yurt.system.service.DictionaryService
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -40,4 +42,8 @@ open class DictionaryController {
         return dictionaryService.update(update)
     }
 
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable id: Long): Boolean {
+        return dictionaryService.deleteById(id)
+    }
 }
