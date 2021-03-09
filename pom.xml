@@ -91,8 +91,14 @@
             <url>https://maven.aliyun.com/repository/public</url>
         </repository>
         <repository>
-            <id>aliyun_code</id>
-            <url>http://code.aliyun.com/maven_/repository/raw/public</url>
+            <id>coding</id>
+            <url>https://yurts-maven.pkg.coding.net/repository/public/content/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
     <pluginRepositories>
@@ -129,17 +135,6 @@
                 <configuration>
                     <jvmTarget>1.8</jvmTarget>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
