@@ -1,6 +1,6 @@
 package com.github.liulus.yurt.system.model.entity
 
-import com.github.liulus.yurt.system.context.SystemConst
+import com.github.liulus.yurt.system.ext.TABLE_PREFIX_SYS
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Table
@@ -11,7 +11,7 @@ import javax.persistence.Table
  * @version V1.0
  * @since 2021/2/9
  */
-@Table(name = SystemConst.TABLE_PREFIX + "organization")
+@Table(name = TABLE_PREFIX_SYS + "organization")
 data class Organization(
         var id: Long? = null,
         var parentId: Long? = null,

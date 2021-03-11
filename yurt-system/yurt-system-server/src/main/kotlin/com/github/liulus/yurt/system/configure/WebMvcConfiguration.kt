@@ -1,8 +1,8 @@
 package com.github.liulus.yurt.system.configure
 
 import com.github.liulus.yurt.convention.web.ApiResponseHandler
-import com.github.liulus.yurt.system.context.Routes
-import com.github.liulus.yurt.system.context.ViewProperties
+import com.github.liulus.yurt.system.model.Routes
+import com.github.liulus.yurt.system.model.ViewProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -43,10 +43,10 @@ open class WebMvcConfiguration : WebMvcConfigurer {
         index.redirect = "/home"
         routes.addRoute(index)
         routes.addRoute("/home", "/view/${viewProperties.ui}/home.js")
-        routes.addRoute("/menu/index", "/view/${viewProperties.ui}/menu.js")
-        routes.addRoute("/dictionary/index", "/view/${viewProperties.ui}/dictionary.js")
-        routes.addRoute("/user/index", "/view/${viewProperties.ui}/user.js")
-        routes.addRoute("/organization/index", "/view/${viewProperties.ui}/organization.js")
+        routes.addRoute("/sys/menu", "/view/${viewProperties.ui}/menu.js")
+        routes.addRoute("/sys/dictionary", "/view/${viewProperties.ui}/dictionary.js")
+        routes.addRoute("/sys/user", "/view/${viewProperties.ui}/user.js")
+        routes.addRoute("/sys/dept", "/view/${viewProperties.ui}/dept.js")
         return routes
     }
 

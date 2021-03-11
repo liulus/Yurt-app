@@ -4,7 +4,6 @@ import com.github.liulus.yurt.jdbc.JdbcRepository
 import com.github.liulus.yurt.jdbc.annotation.If
 import com.github.liulus.yurt.jdbc.annotation.Param
 import com.github.liulus.yurt.jdbc.annotation.Select
-import com.github.liulus.yurt.system.context.SystemConst
 import com.github.liulus.yurt.system.model.dto.DictDTO
 import com.github.liulus.yurt.system.model.entity.Dictionary
 
@@ -15,7 +14,7 @@ import com.github.liulus.yurt.system.model.entity.Dictionary
  */
 interface DictionaryRepository : JdbcRepository<Dictionary> {
 
-    @Select(where = ["parent_id = :parentId ", "dict_key = :dictKey", SystemConst.NOT_DELETED])
+    @Select(where = ["parent_id = :parentId", "dict_key = :dictKey", Select.NOT_DELETED])
     fun selectByKeyAndParentId(
         @Param("dictKey") dictKey: String,
         @Param("parentId") parentId: Long
@@ -24,9 +23,12 @@ interface DictionaryRepository : JdbcRepository<Dictionary> {
     @Select(
         testWheres = [
             If(test = "parentId != null", value = "parent_id = :parentId"),
-            If(test = "keyword != null && type != ''", value = "dict_key like :keyword")
-        ], where = [SystemConst.NOT_DELETED]
+            If(test = "keyword != null && keyword != ''", value = "(dict_key like :keyword OR dict_value like :keyword)")
+        ], where = [Select.NOT_DELETED], orderBy = "order_num"
     )
     fun selectByQuery(query: DictDTO.Query): List<Dictionary>
+
+    @Select(columns = [Select.COUNT], where = ["parent_id = :parentId", Select.NOT_DELETED])
+    fun countByParentId(parentId: Long): Int
 
 }

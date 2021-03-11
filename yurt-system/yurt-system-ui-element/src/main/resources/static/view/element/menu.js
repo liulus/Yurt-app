@@ -54,8 +54,9 @@ define(["text!/view/element/menu.html"], function (tmpl) {
                 editRes.then(res => {
                     this.$message.success(this.editFormConfig.title + '成功')
                     this.initMenuTree()
+                    this.editFormConfig.visible = false
                 })
-                this.editFormConfig.visible = false
+                
             },
             handleNodeClick(nodeData) {
                 this.editFormConfig.parent = nodeData.name

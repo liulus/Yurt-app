@@ -1,9 +1,9 @@
 package com.github.liulus.yurt.system.security
 
 import com.github.liulus.yurt.convention.bean.BeanUtils
-import com.github.liulus.yurt.system.context.SystemConst
+import com.github.liulus.yurt.system.ext.ADMIN_USER
 import com.github.liulus.yurt.system.service.AuthorityService
-import com.github.liulus.yurt.system.service.OrganizationService
+import com.github.liulus.yurt.system.service.DeptService
 import com.github.liulus.yurt.system.service.RoleService
 import com.github.liulus.yurt.system.service.UserService
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -26,7 +26,7 @@ class LoginUserService : UserDetailsService {
     private lateinit var userService: UserService
 
     @Resource
-    private lateinit var organizationService: OrganizationService
+    private lateinit var deptService: DeptService
 
     @Resource
     private lateinit var roleService: RoleService
@@ -42,15 +42,14 @@ class LoginUserService : UserDetailsService {
         val loginUser = BeanUtils.convert(LoginUser::class.java, user)
         Optional.ofNullable(loginUser.orgId)
             .filter { it > 0L }
-            .map { organizationService.findById(it) }
+            .map { deptService.findById(it) }
             .ifPresent {
                 loginUser.orgCode = it.code
-                loginUser.orgName = it.fullName
-                loginUser.levelIndex = it.levelIndex
+                loginUser.orgName = it.name
             }
 
         // 超级管理员拥有所有权限
-        if (Arrays.binarySearch(SystemConst.ADMIN_USER, user.username) >= 0) {
+        if (Arrays.binarySearch(ADMIN_USER, user.username) >= 0) {
             val authorities = authorityService.findAll()
             val auths = authorities.asSequence().map { it.code }
                 .map { SimpleGrantedAuthority(it) }.toList()

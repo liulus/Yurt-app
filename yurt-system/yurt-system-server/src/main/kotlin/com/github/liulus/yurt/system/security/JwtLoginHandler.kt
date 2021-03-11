@@ -1,6 +1,6 @@
 package com.github.liulus.yurt.system.security
 
-import com.github.liulus.yurt.system.util.JwtUtils.encode
+import com.github.liulus.yurt.system.ext.encodeToToken
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.BadCredentialsException
@@ -31,7 +31,7 @@ class JwtLoginHandler : AuthenticationSuccessHandler, AuthenticationFailureHandl
         authentication: Authentication
     ) {
         val loginUser = authentication.principal as LoginUser
-        val jwt = encode(loginUser)
+        val jwt = encodeToToken(loginUser)
         response.contentType = MediaType.APPLICATION_JSON_UTF8_VALUE
         response.writer.write(String.format(SUCCESS_RES, jwt))
     }

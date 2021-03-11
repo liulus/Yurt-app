@@ -16,7 +16,7 @@
                 <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd"></el-button>
             </el-col>
             <el-col :span="12" :offset="2">
-                <el-input v-model="keyword" placeholder="请输入搜索内容" v-on:keyup.native.enter="handleSearch">
+                <el-input v-model="queryForm.keyword" placeholder="请输入搜索内容" v-on:keyup.native.enter="handleSearch">
                     <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
                 </el-input>
             </el-col>

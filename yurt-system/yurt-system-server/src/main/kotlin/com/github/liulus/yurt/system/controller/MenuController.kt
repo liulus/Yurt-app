@@ -21,6 +21,7 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api")
 open class MenuController {
+
     @Resource
     private lateinit var menuService: MenuService
 

@@ -1,6 +1,6 @@
 package com.github.liulus.yurt.system.security
 
-import com.github.liulus.yurt.system.util.JwtUtils.parseToken
+import com.github.liulus.yurt.system.ext.parseToken
 import org.springframework.http.MediaType
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.authentication.AnonymousAuthenticationToken

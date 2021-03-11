@@ -1,4 +1,4 @@
-package com.github.liulus.yurt.system.context
+package com.github.liulus.yurt.system.model
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

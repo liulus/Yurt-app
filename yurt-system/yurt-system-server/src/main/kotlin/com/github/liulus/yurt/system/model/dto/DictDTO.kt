@@ -12,11 +12,10 @@ import javax.validation.constraints.Size
  * @version V1.0
  * @since 2021/3/2
  */
-object DictDTO {
+abstract class DictDTO {
 
     class Query : PageQuery() {
         var parentId: Long? = null
-        var dictKey: String? = null
 
         @Size(max = 60, message = "关键字长度不能超过60")
         var keyword: String? = null

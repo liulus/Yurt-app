@@ -9,7 +9,7 @@ import com.github.liulus.yurt.system.repository.DictionaryRepository
 import com.github.liulus.yurt.system.service.DictionaryService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.util.Assert
+import org.springframework.util.StringUtils
 import javax.annotation.Resource
 
 /**
@@ -32,8 +32,7 @@ open class DictionaryServiceImpl : DictionaryService {
     }
 
     override fun update(update: DictDTO.Detail): Int {
-        val id = update.id
-        requireNotNull(id) { "更新数据id必填" }
+        val id = requireNotNull(update.id) { "更新数据id必填" }
         val old = dictionaryRepository.selectById(id)
         checkNotNull(old) { "id $id 对应的记录不存在" }
         if (update.dictKey != old.dictKey) {
@@ -44,12 +43,8 @@ open class DictionaryServiceImpl : DictionaryService {
     }
 
     override fun deleteById(id: Long): Boolean {
-        val query = DictDTO.Query().apply {
-            parentId = id
-            pageSize = 1
-        }
-        val dictList = dictionaryRepository.selectByQuery(query)
-        check(dictList.isNullOrEmpty()) { "此字典存在子字典项, 请先删除子字典" }
+        val count = dictionaryRepository.countByParentId(id)
+        check(count == 0) { "此字典存在子字典项, 请先删除子字典" }
         val num = dictionaryRepository.deleteLogicalById(id)
         return num > 0
     }
@@ -58,7 +53,7 @@ open class DictionaryServiceImpl : DictionaryService {
         require(!dictKey.isNullOrEmpty()) { "字典key不能为空" }
         requireNotNull(parentId) { "父节点id不能为空" }
         val dict = dictionaryRepository.selectByKeyAndParentId(dictKey, parentId)
-        Assert.isNull(dict, "字典Key已经存在")
+        check(dict == null) { "字典Key已经存在" }
     }
 
     override fun findById(id: Long): Dictionary? {
@@ -66,9 +61,10 @@ open class DictionaryServiceImpl : DictionaryService {
     }
 
     override fun findPageList(query: DictDTO.Query): Page<DictDTO.Detail> {
+        if (StringUtils.hasLength(query.keyword)) {
+            query.keyword = query.keyword + '%'
+        }
         val dictList = dictionaryRepository.selectByQuery(query)
-        val page = Pages.page(dictList)
-        val targetList = page.results.sortedBy { it.orderNum }.map { BeanUtils.convert(DictDTO.Detail::class.java, it) }
-        return page.transform(targetList)
+        return Pages.page(dictList).simpleMap { BeanUtils.convert(DictDTO.Detail::class.java, it) }
     }
 }

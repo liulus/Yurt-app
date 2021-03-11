@@ -9,7 +9,7 @@ import javax.validation.constraints.Size
  * Date : 2017/7/13 19:49
  * version $Id: MenuDTO.java, v 0.1 Exp $
  */
-object MenuDTO {
+abstract class MenuDTO {
 
     data class Query(var enabled: Boolean? = null, var type: String? = null)
 

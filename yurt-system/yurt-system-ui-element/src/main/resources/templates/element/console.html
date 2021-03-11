@@ -119,6 +119,10 @@
         methods: {
             initMyMenu: function () {
                 Tools.http.get('/api/my/menu').then(res => this.menuList = res.data)
+            },
+            logoutHandle: function() {
+                localStorage.removeItem('access_token')
+                window.location.href = '/login'
             }
         },
         router: new VueRouter({ routes })

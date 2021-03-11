@@ -62,7 +62,7 @@ open class WebSecurityConfiguration : WebSecurityConfigurerAdapter() {
         val deniedHandler = JsonAccessDeniedHandler()
         http.exceptionHandling().accessDeniedHandler(deniedHandler).authenticationEntryPoint(deniedHandler)
         // 跨域问题
-        http.cors().configurationSource(source())
+//        http.cors().configurationSource(source())
 
         // 对于前台页面请求, 禁用一些不必要的拦截器
         http.logout().disable()

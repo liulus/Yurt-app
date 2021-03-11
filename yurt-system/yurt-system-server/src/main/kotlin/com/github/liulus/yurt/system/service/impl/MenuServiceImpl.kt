@@ -1,7 +1,7 @@
 package com.github.liulus.yurt.system.service.impl
 
 import com.github.liulus.yurt.convention.bean.BeanUtils
-import com.github.liulus.yurt.system.context.SystemConst
+import com.github.liulus.yurt.system.ext.MENU_TYPE_MENU
 import com.github.liulus.yurt.system.model.dto.MenuDTO
 import com.github.liulus.yurt.system.model.entity.Menu
 import com.github.liulus.yurt.system.repository.MenuRepository
@@ -34,7 +34,7 @@ open class MenuServiceImpl : MenuService {
     }
 
     override fun findUserMenus(userId: Long): List<MenuDTO.Detail> {
-        val query = MenuDTO.Query(enabled = true, type = SystemConst.MENU_TYPE_MENU)
+        val query = MenuDTO.Query(enabled = true, type = MENU_TYPE_MENU)
         val menus = menuRepository.selectByQuery(query)
         val menuTree = buildMenuTree(menus)
         return menuTree.filter { StringUtils.hasText(it.url) || !it.children.isNullOrEmpty() }.toList()
@@ -67,8 +67,7 @@ open class MenuServiceImpl : MenuService {
     }
 
     override fun update(update: MenuDTO.Update): Int {
-        val id = update.id
-        requireNotNull(id) { "id不能为空" }
+        val id = requireNotNull(update.id) { "id不能为空" }
         val oldMenu = menuRepository.selectById(id)
         checkNotNull(oldMenu) { "菜单id $id 不存在" }
         if (update.name != oldMenu.name) {
@@ -95,8 +94,7 @@ open class MenuServiceImpl : MenuService {
     override fun changeStatus(id: Long) {
         val oldMenu = menuRepository.selectById(id)
         checkNotNull(oldMenu) { "菜单id $id 不存在" }
-        val oldEnabled = oldMenu.enabled
-        requireNotNull(oldEnabled)
+        val oldEnabled = requireNotNull(oldMenu.enabled)
         val upMenu = Menu(id = id, enabled = !oldEnabled)
         menuRepository.updateIgnoreNull(upMenu)
     }

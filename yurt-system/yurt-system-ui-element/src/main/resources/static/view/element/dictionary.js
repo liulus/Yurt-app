@@ -31,7 +31,8 @@ define(["text!/view/element/dictionary.html"], function (tmpl) {
                     .then(res => this.page = res.data)
             },
             handleSearch: function () {
-
+                console.log('click')
+                this.initData()
             },
             handleAdd() {
                 this.editForm = { parentId: this.queryForm.parentId }
