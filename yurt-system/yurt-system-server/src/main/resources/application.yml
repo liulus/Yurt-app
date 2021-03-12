@@ -11,7 +11,6 @@ spring:
     url: jdbc:mysql://129.28.201.208:3060/yurt?useSSL=false&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&allowMultiQueries=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: yurt
-    password: 9cbRwItUtxCyy0PR
   jackson:
     default-property-inclusion: non_empty
   mustache:
