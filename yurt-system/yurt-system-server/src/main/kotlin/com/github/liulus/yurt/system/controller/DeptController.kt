@@ -4,6 +4,7 @@ import com.github.liulus.yurt.system.model.dto.DeptDTO
 import com.github.liulus.yurt.system.service.DeptService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -33,5 +34,9 @@ open class DeptController {
         return deptService.insert(add)
     }
 
+    @PutMapping
+    fun update(@RequestBody @Valid update: DeptDTO.Detail): Int {
+        return deptService.update(update)
+    }
 
 }

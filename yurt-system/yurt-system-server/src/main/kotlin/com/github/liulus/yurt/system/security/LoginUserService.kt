@@ -44,7 +44,6 @@ class LoginUserService : UserDetailsService {
             .filter { it > 0L }
             .map { deptService.findById(it) }
             .ifPresent {
-                loginUser.orgCode = it.code
                 loginUser.orgName = it.name
             }
 

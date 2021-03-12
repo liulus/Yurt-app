@@ -16,6 +16,12 @@ interface MenuRepository : JdbcRepository<Menu> {
     @Select(where = ["name = :param", Select.NOT_DELETED])
     fun selectByName(name: String): Menu?
 
+    @Select(columns = ["count(*)"], where = ["parent_id = :param", Select.NOT_DELETED])
+    fun countByParentId(parentId: Long): Int
+
+    @Select(where = ["parent_id in (:param)", Select.NOT_DELETED])
+    fun selectByParentIds(parentIds: List<Long>): List<Menu>
+
     @Select(
         where = [Select.NOT_DELETED],
         testWheres = [
@@ -24,7 +30,4 @@ interface MenuRepository : JdbcRepository<Menu> {
         ]
     )
     fun selectByQuery(query: MenuDTO.Query): List<Menu>
-
-    @Select(columns = ["count(*)"], where = ["parent_id = :param", Select.NOT_DELETED])
-    fun countByParentId(parentId: Long): Int
 }

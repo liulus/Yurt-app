@@ -13,8 +13,8 @@ import com.github.liulus.yurt.system.model.entity.Dept
  */
 interface DeptRepository : JdbcRepository<Dept> {
 
-    @Select(where = ["code = :param", Select.NOT_DELETED])
-    fun selectByCode(code: String): Dept?
+    @Select(where = ["name = :param", Select.NOT_DELETED])
+    fun selectByName(name: String): Dept?
 
     @Select(
         testWheres = [

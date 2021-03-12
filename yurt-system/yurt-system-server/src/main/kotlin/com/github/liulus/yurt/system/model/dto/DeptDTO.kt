@@ -21,12 +21,10 @@ abstract class DeptDTO {
         @NotNull
         var parentId: Long? = null,
         @NotEmpty
-        @Size(min = 3, max = 40)
-        var code: String? = null,
-        @NotEmpty
         @Size(min = 3, max = 250)
         var name: String? = null,
         var orderNum: Int? = null,
+        var enabled: Boolean? = null,
         @Size(min = 2, max = 500)
         var remark: String? = null,
         var gmtCreated: LocalDateTime? = null,

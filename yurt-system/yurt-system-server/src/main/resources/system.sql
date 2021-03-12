@@ -69,11 +69,11 @@ DROP TABLE IF EXISTS sys_dept;
 CREATE TABLE sys_dept (
     id      INT UNSIGNED PRIMARY KEY  AUTO_INCREMENT NOT NULL  COMMENT '部门id',
     parent_id     INT UNSIGNED    DEFAULT 0          NOT NULL  COMMENT '父部门Id',
-    code          VARCHAR(40)     DEFAULT ''         NOT NULL  COMMENT '部门编号',
     name          VARCHAR(256)    DEFAULT ''         NOT NULL  COMMENT '部门名称',
     order_num     SMALLINT UNSIGNED    DEFAULT 0     NOT NULL  COMMENT '顺序号',
     level_index   VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '特殊编号, 用于查询',
     remark        VARCHAR(512)    DEFAULT ''         NOT NULL  COMMENT '备注',
+    is_enabled    TINYINT(1)      DEFAULT 1          NOT NULL  COMMENT '是否启用',
     is_deleted    TINYINT(1)      DEFAULT 0          NOT NULL  COMMENT '是否删除',
     gmt_created   DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  COMMENT '创建时间',
     gmt_modified  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -84,7 +84,7 @@ CREATE TABLE sys_dept (
     COLLATE = utf8_general_ci
     COMMENT = '机构表';
 
-CREATE INDEX idx_code ON sys_dept (code);
+CREATE INDEX idx_name ON sys_dept (name);
 CREATE INDEX idx_level ON sys_dept (level_index);
 
 

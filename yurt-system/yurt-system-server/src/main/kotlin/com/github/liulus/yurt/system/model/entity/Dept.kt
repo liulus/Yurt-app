@@ -15,12 +15,13 @@ import javax.persistence.Table
 data class Dept(
     var id: Long? = null,
     var parentId: Long? = null,
-    var code: String? = null,
     var name: String? = null,
     var levelIndex: String? = null,
     var orderNum: Int? = null,
     var remark: String? = null,
 
+    @Column(name = "is_enabled")
+    var enabled: Boolean? = null,
     @Column(name = "is_deleted")
     var deleted: Boolean? = null,
     var gmtCreated: LocalDateTime? = null,

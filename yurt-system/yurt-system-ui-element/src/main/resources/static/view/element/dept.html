@@ -1,0 +1,71 @@
+<main class="main">
+    <el-breadcrumb class="breadcrumb">
+        <el-breadcrumb-item>系统管理</el-breadcrumb-item>
+        <el-breadcrumb-item>部门管理</el-breadcrumb-item>
+    </el-breadcrumb>
+    <div class="main__bd">
+
+        <el-row>
+            <!-- <el-col :span="4">
+                <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('')"></el-button>
+            </el-col> -->
+            <el-col :span="12" :offset="6">
+                <el-input v-model="keyword" placeholder="请输入搜索内容" v-on:keyup.native.enter="handleSearch">
+                    <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+                </el-input>
+            </el-col>
+        </el-row>
+
+        <el-table v-if="dataLoaded" :border="true" :data="showData" row-key="id" :expand-row-keys="[rootId+'']"
+            width="100%">
+            <el-table-column label="名称" prop="name" min-width="180px" />
+            <el-table-column label="顺序" prop="orderNum" width="80px" />
+            <el-table-column label="备注" prop="remark" min-width="200px" />
+            <el-table-column label="创建时间" prop="gmtCreated" min-width="200px" />
+            <el-table-column label="状态" min-width="80px" v-slot="{row}">
+                <el-switch v-model="row.enabled" @change="handleChangeStatus(row, $event)" />
+            </el-table-column>
+            <el-table-column label="操作" min-width="120px" v-slot="{row}">
+                <el-link type="primary" icon="el-icon-plus" :underline="false" @click="handleAdd(row)" />
+                <el-link class="ml-10" type="primary" icon="el-icon-edit" :underline="false" @click="handleEdit(row)" />
+                <el-link v-if="row.parentId != 0" class="ml-10" type="danger" icon="el-icon-delete" :underline="false"
+                    @click="handleDelete(row)" />
+            </el-table-column>
+            <div slot="empty">
+                您还没有创建基础信息,
+                <el-link type="primary" :underline="false" @click="handleAdd('')">现在创建</el-link>
+            </div>
+        </el-table>
+    </div>
+
+    <el-dialog :title="editFormConfig.title" :visible.sync="editFormConfig.visible" width="660px" top="10vh"
+        :close-on-click-modal="false" @opened="handleEditFormOpened">
+        <el-form :model="editForm" label-width="100px" label-suffix=":">
+            <el-form-item label="父节点">
+                <!-- 新增不能修改父节点, 跟部门不能修改父节点 -->
+                <span v-show="editFormConfig.isAdd || editForm.parentId == 0">{{editFormConfig.parent}}</span>
+                <el-select v-show="!editFormConfig.isAdd && editForm.parentId != 0" ref="nodeSelect"
+                    v-model="editFormConfig.parent" class="w-100">
+                    <el-option class="h-100 bg-white" :value="editForm.parentId" :label="editFormConfig.parent">
+                        <el-tree ref="updateTree" :data="deptData" :props="{label: 'name'}" node-key="id"
+                            :default-expanded-keys="[rootId]" :expand-on-click-node="false"
+                            @node-click="handleNodeClick" />
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="名称">
+                <el-input v-model="editForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="顺序号">
+                <el-input v-model="editForm.orderNum" type="number"></el-input>
+            </el-form-item>
+            <el-form-item label="备注">
+                <el-input type="textarea" v-model="editForm.remark"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="t-center">
+            <el-button @click="editFormConfig.visible = false">取 消</el-button>
+            <el-button type="primary" @click="doEdit">确 定</el-button>
+        </div>
+    </el-dialog>
+</main>

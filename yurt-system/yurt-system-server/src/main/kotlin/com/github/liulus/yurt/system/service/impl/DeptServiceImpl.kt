@@ -8,6 +8,7 @@ import com.github.liulus.yurt.system.repository.DeptRepository
 import com.github.liulus.yurt.system.service.DeptService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.util.StringUtils
 import javax.annotation.Resource
 
 /**
@@ -28,11 +29,11 @@ open class DeptServiceImpl : DeptService {
         val dept = BeanUtils.convert(add, Dept())
         if (parentId == 0L) {
             val exist = deptRepository.selectByQuery(DeptDTO.Query(parentId = parentId))
-            check(exist.isNullOrEmpty()) {"已经创建根节点了, 无法创建"}
+            check(exist.isNullOrEmpty()) { "已经创建根节点了, 无法创建" }
             dept.levelIndex = nextLevelIndex("", emptyList());
             return deptRepository.insert(dept)
         }
-        checkCode(add.code)
+        checkName(add.name)
         val parentDept = deptRepository.selectById(parentId)
         checkNotNull(parentDept) { "数据错误, 父部门不存在" }
 
@@ -46,24 +47,26 @@ open class DeptServiceImpl : DeptService {
         val oldDept = deptRepository.selectById(id)
         checkNotNull(oldDept) { "部门 $id 不存在" }
 
-        if (update.code != oldDept.code) {
-            checkCode(update.code)
+        if (update.name != oldDept.name) {
+            checkName(update.name)
         }
         val dept = BeanUtils.convert(update, Dept())
         // 父节点变化 更新层级索引
         if (update.parentId != oldDept.parentId) {
             val parentDept = deptRepository.selectById(requireNotNull(update.parentId))
             checkNotNull(parentDept) { "数据错误, 父部门不存在" }
+            val start = StringUtils.startsWithIgnoreCase(parentDept.levelIndex, oldDept.levelIndex)
+            check(!start) { "不能选择${parentDept.name}作为父部门" }
             dept.parentId = parentDept.id
             dept.levelIndex = generateNextLevelIndex(parentDept)
         }
         return deptRepository.updateIgnoreNull(dept)
     }
 
-    private fun checkCode(code: String?) {
-        require(!code.isNullOrEmpty()) { "部门code不能为空" }
-        val dept = deptRepository.selectByCode(code)
-        check(dept == null) { "部门编码 $code 已存在" }
+    private fun checkName(name: String?) {
+        require(!name.isNullOrEmpty()) { "部门code不能为空" }
+        val dept = deptRepository.selectByName(name)
+        check(dept == null) { "部门名称 $name 已存在" }
     }
 
     private fun generateNextLevelIndex(parentDept: Dept): String {
@@ -84,8 +87,6 @@ open class DeptServiceImpl : DeptService {
             .groupBy { requireNotNull(it.parentId) }
         // 默认设置的跟机构
         val rootDeptList = deptMap[0L]
-//        check(!rootDeptList.isNullOrEmpty()) { "数据错误, 没有设置根部门" }
-//        val userRootDeptList = deptMap[rootDeptList[0].id]
         setChildren(rootDeptList, deptMap)
         return rootDeptList ?: emptyList()
     }

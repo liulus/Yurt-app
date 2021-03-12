@@ -70,8 +70,15 @@ open class MenuServiceImpl : MenuService {
         val id = requireNotNull(update.id) { "id不能为空" }
         val oldMenu = menuRepository.selectById(id)
         checkNotNull(oldMenu) { "菜单id $id 不存在" }
+        check(update.parentId != id) { "不能选择自己作为父节点" }
         if (update.name != oldMenu.name) {
             checkName(update.name)
+        }
+        // 校验 parentId 是否合法
+        if (oldMenu.parentId != update.parentId) {
+            val children = findAllChildren(listOf(id))
+            val existMenu = children.find { it.id == update.parentId }
+            check(existMenu == null) { "不能选择 ${existMenu?.name} 作为父节点" }
         }
         val upMenu = BeanUtils.convert(Menu::class.java, update)
         return menuRepository.updateIgnoreNull(upMenu)
@@ -81,6 +88,16 @@ open class MenuServiceImpl : MenuService {
         requireNotNull(name) { "菜单名称不能为空" }
         val menu = menuRepository.selectByName(name)
         check(menu == null) { "菜单名称 $name 已存在" }
+    }
+
+    private fun findAllChildren(parentIds: List<Long>): List<Menu> {
+        val menus = menuRepository.selectByParentIds(parentIds)
+        if (menus.isNullOrEmpty()) {
+            return emptyList()
+        }
+        val result = ArrayList(menus)
+        result.addAll(findAllChildren(menus.mapNotNull { it.id }))
+        return result
     }
 
     override fun delete(id: Long): Int {
