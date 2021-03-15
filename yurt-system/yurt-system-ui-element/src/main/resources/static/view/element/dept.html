@@ -10,13 +10,13 @@
                 <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('')"></el-button>
             </el-col> -->
             <el-col :span="12" :offset="6">
-                <el-input v-model="keyword" placeholder="请输入搜索内容" v-on:keyup.native.enter="handleSearch">
+                <el-input v-model="keyword" placeholder="试试输入名称或备注" v-on:keyup.native.enter="handleSearch">
                     <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
                 </el-input>
             </el-col>
         </el-row>
 
-        <el-table v-if="dataLoaded" :border="true" :data="showData" row-key="id" :expand-row-keys="[rootId+'']"
+        <el-table v-if="dataLoaded" :border="true" :data="showData" row-key="id" :expand-row-keys="expandKeys"
             width="100%">
             <el-table-column label="名称" prop="name" min-width="180px" />
             <el-table-column label="顺序" prop="orderNum" width="80px" />
@@ -31,7 +31,7 @@
                 <el-link v-if="row.parentId != 0" class="ml-10" type="danger" icon="el-icon-delete" :underline="false"
                     @click="handleDelete(row)" />
             </el-table-column>
-            <div slot="empty">
+            <div v-if="!deptData || deptData.length == 0" slot="empty">
                 您还没有创建基础信息,
                 <el-link type="primary" :underline="false" @click="handleAdd('')">现在创建</el-link>
             </div>

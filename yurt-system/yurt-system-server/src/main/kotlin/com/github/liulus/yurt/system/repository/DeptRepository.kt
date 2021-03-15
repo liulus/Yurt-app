@@ -16,6 +16,9 @@ interface DeptRepository : JdbcRepository<Dept> {
     @Select(where = ["name = :param", Select.NOT_DELETED])
     fun selectByName(name: String): Dept?
 
+    @Select(columns = ["count(*)"], where = ["parent_id = :param", Select.NOT_DELETED])
+    fun countByParentId(id: Long): Int
+
     @Select(
         testWheres = [
             If(test = "parentId != null", value = "parent_id = :parentId")

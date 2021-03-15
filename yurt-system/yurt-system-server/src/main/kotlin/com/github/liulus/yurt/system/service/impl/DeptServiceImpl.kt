@@ -104,4 +104,22 @@ open class DeptServiceImpl : DeptService {
     override fun findById(id: Long): DeptDTO.Detail? {
         TODO("Not yet implemented")
     }
+
+    override fun delete(id: Long) {
+        val oldDept = deptRepository.selectById(id)
+        checkNotNull(oldDept) { "菜单id $id 不存在" }
+        val count = deptRepository.countByParentId(id)
+        check(count == 0) { "请先删除 ${oldDept.name} 的子部门数据 !" }
+        deptRepository.deleteLogicalById(id)
+    }
+
+    override fun changeStatus(id: Long) {
+        val oldDept = deptRepository.selectById(id)
+        checkNotNull(oldDept) { "菜单id $id 不存在" }
+        val oldEnabled = requireNotNull(oldDept.enabled)
+        val upMenu = Dept(id = id, enabled = !oldEnabled)
+        deptRepository.updateIgnoreNull(upMenu)
+    }
+
+
 }

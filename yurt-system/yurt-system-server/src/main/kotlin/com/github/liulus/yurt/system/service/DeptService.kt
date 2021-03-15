@@ -29,4 +29,17 @@ interface DeptService {
      */
     fun findById(id: Long): DeptDTO.Detail?
 
+    /**
+     * 删除
+     * @param id id
+     */
+    fun delete(id: Long)
+
+    /**
+     * 改变状态, 启用->禁用, 禁用->启用
+     * @param id id
+     */
+    fun changeStatus(id: Long)
+
+
 }

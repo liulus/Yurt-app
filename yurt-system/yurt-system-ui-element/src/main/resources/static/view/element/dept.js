@@ -30,6 +30,7 @@ define(["text!/view/element/dept.html"], function (tmpl) {
                         this.showData = res.data
                         if (res.data && res.data.length > 0) {
                             this.rootId = res.data[0].id
+                            this.expandKeys = [this.rootId + '']
                         }
                         this.dataLoaded = true
                     })
@@ -70,7 +71,7 @@ define(["text!/view/element/dept.html"], function (tmpl) {
                     this.editFormConfig.isRoot = false
                     this.editFormConfig.visible = false
                 })
-                
+
             },
             handleNodeClick(nodeData) {
                 this.editFormConfig.parent = nodeData.name
@@ -82,26 +83,26 @@ define(["text!/view/element/dept.html"], function (tmpl) {
                     this.$message.error(node.name + '存在子节点, 无法删除')
                     return
                 }
-                this.$confirm('确定删除菜单' + node.name, '提示', {
+                this.$confirm('确定删除部门' + node.name, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     closeOnClickModal: false,
                     type: 'warning'
-                }).then(_ => Tools.http.delete('/api/menu/' + node.id))
+                }).then(_ => Tools.http.delete('/api/dept/' + node.id))
                     .then(res => {
-                        this.$message.success('删除菜单成功')
+                        this.$message.success('删除部门成功')
                         this.initData()
                     })
             },
             handleChangeStatus(row, value) {
-                Tools.http.postJson('/api/menu/change/status/' + row.id)
+                Tools.http.postJson('/api/dept/change/status/' + row.id)
                     .then(res => {
                         this.$message.success('更新状态成功')
                     })
             },
             handleSearch() {
-                this.expandKeys = []
-                this.showData = this.filterNode(this.keyword, this.menuList)
+                this.expandKeys = [this.rootId + '']
+                this.showData = this.filterNode(this.keyword, this.deptData)
             },
             filterNode(keyword, itemList) {
                 if (!itemList) {
