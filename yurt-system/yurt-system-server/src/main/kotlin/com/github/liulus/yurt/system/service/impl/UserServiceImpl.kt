@@ -3,7 +3,8 @@ package com.github.liulus.yurt.system.service.impl
 import com.github.liulus.yurt.convention.bean.BeanUtils
 import com.github.liulus.yurt.convention.data.Page
 import com.github.liulus.yurt.convention.exception.ServiceException
-import com.github.liulus.yurt.system.model.dto.UserQo
+import com.github.liulus.yurt.convention.util.Pages
+import com.github.liulus.yurt.system.model.dto.UserDTO
 import com.github.liulus.yurt.system.model.dto.UserVo
 import com.github.liulus.yurt.system.model.dto.UserVo.Register
 import com.github.liulus.yurt.system.model.entity.User
@@ -24,7 +25,7 @@ import javax.annotation.Resource
 open class UserServiceImpl : UserService {
 
     @Resource
-    private val userRepository: UserRepository? = null
+    private lateinit var userRepository: UserRepository
 
     override fun register(register: Register?): Long? {
         if (register!!.password != register.confirmPassword) {
@@ -37,25 +38,16 @@ open class UserServiceImpl : UserService {
     }
 
     override fun findById(id: Long?): User? {
-        return userRepository!!.selectById(id!!)
+        return userRepository.selectById(id!!)
     }
 
     override fun findByUsername(username: String): User? {
-        return  userRepository!!.selectByUsername(username)
+        return userRepository.selectByUsername(username)
     }
 
-    override fun findPageList(qo: UserQo?): Page<UserVo.List?>? {
-//        LoginUser loginUser = UserUtils.getLoginUser();
-
-//        if (loginUser != null && loginUser.hasOrg()) {
-//            qo.setSerialNum(loginUser.getLevelIndex());
-//            if (StringUtils.isEmpty(qo.getOrgCode())) {
-//                qo.setOrgCode(loginUser.getOrgCode());
-//            }
-//        }
-//        Page<User> pageList = userRepository.selectPageList(qo);
-        return null
-        //        return PageUtils.convert(pageList, UserVo.List.class);
+    override fun findPageList(query: UserDTO.Query): Page<UserDTO.View> {
+        val dictList = userRepository.selectByQuery(query)
+        return Pages.page(dictList).simpleMap { BeanUtils.convert(it, UserDTO.View()) }
     }
 
     override fun insert(user: UserVo.Add?): Long? {
@@ -69,7 +61,7 @@ open class UserServiceImpl : UserService {
         //        addUser.setCreator(UserUtils.getLoginUser().getUsername());
         val password = if (StringUtils.hasText(user.password)) user.password else "123456"
         //        addUser.setPassword(UserUtils.encode(password));
-        userRepository!!.insert(addUser)
+        userRepository.insert(addUser)
         return addUser.id
     }
 
@@ -85,7 +77,7 @@ open class UserServiceImpl : UserService {
             checkMobileNum(user.mobileNum!!)
         }
         val upUser = BeanUtils.convert(user, User())
-        userRepository!!.updateIgnoreNull(upUser)
+        userRepository.updateIgnoreNull(upUser)
     }
 
     private fun checkUsername(username: String) {
@@ -119,6 +111,6 @@ open class UserServiceImpl : UserService {
     }
 
     override fun delete(id: Long?) {
-        userRepository!!.deleteById(id!!)
+        userRepository.deleteById(id!!)
     }
 }

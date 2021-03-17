@@ -9,18 +9,15 @@ import org.springframework.security.core.userdetails.UserDetails
  * version $Id: LoginUser.java, v 0.1 Exp $
  */
 class LoginUser : UserDetails {
+
     var id: Long? = null
-    var code: String? = null
     private var username: String? = null
     private var password: String? = null
     var nickName: String? = null
     var avatar: String? = null
-    var sex: Boolean? = null
     var email: String? = null
     var mobileNum: String? = null
-    var telephone: String? = null
-    var userType: String? = null
-    var userStatus: String? = null
+    var status: String? = null
     var lock: Boolean? = null
 
     /**** Organization  */

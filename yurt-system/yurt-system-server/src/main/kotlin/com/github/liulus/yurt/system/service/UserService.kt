@@ -1,7 +1,7 @@
 package com.github.liulus.yurt.system.service
 
 import com.github.liulus.yurt.convention.data.Page
-import com.github.liulus.yurt.system.model.dto.UserQo
+import com.github.liulus.yurt.system.model.dto.UserDTO
 import com.github.liulus.yurt.system.model.dto.UserVo
 import com.github.liulus.yurt.system.model.dto.UserVo.Register
 import com.github.liulus.yurt.system.model.entity.User
@@ -38,11 +38,10 @@ interface UserService {
 
     /**
      * 根据条件查询用户列表
-     *
-     * @param qo 查询条件
+     * @param query 查询条件
      * @return 用户列表
      */
-    fun findPageList(qo: UserQo?): Page<UserVo.List?>?
+    fun findPageList(query: UserDTO.Query): Page<UserDTO.View>
 
     /**
      * 新增用户

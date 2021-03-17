@@ -87,6 +87,39 @@ CREATE TABLE sys_dept (
 CREATE INDEX idx_name ON sys_dept (name);
 CREATE INDEX idx_level ON sys_dept (level_index);
 
+-- user
+DROP TABLE IF EXISTS sys_user;
+CREATE TABLE sys_user(
+    id     INT UNSIGNED PRIMARY KEY  AUTO_INCREMENT  NOT NULL  COMMENT '用户Id',
+    org_id        INT UNSIGNED    DEFAULT 0          NOT NULL  COMMENT '机构Id',
+    username      VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '用户名',
+    nick_name     VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '昵称',
+    mobile_num    VARCHAR(16)     DEFAULT ''         NOT NULL  COMMENT '手机号',
+    avatar        VARCHAR(256)    DEFAULT ''         NOT NULL  COMMENT '头像',
+    password      VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '密码',
+    gender        TINYINT(1)      DEFAULT 1          NOT NULL  COMMENT '性别',
+    email         VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '邮箱',
+    type          VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '用户类型',
+    status        VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '用户状态',
+    is_lock       TINYINT(1)      DEFAULT 0          NOT NULL  COMMENT '是否锁定',
+    creator       VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '创建人',
+    is_deleted    TINYINT(1)      DEFAULT 0          NOT NULL  COMMENT '是否删除',
+    gmt_created   DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  COMMENT '创建时间',
+    gmt_modified  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    gmt_deleted   DATETIME DEFAULT '2000-01-01'      NOT NULL  COMMENT '删除时间'
+)
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8
+    COLLATE = utf8_general_ci
+    COMMENT = '用户表';
+
+CREATE UNIQUE INDEX uk_name ON sys_user (username);
+CREATE UNIQUE INDEX uk_num ON sys_user (mobile_num);
+
+INSERT INTO sys_user (org_id, username, mobile_num, avatar, password, gender)
+VALUES (0, 'liulu', '15267548275', '', '$2a$10$4d.sZRSu0mNup8TKQtamM.K4CBf9ZIwC7gMuN4B5MROP9iykCnLRC', 1);
+
+
 
 -- param
 DROP TABLE IF EXISTS sys_param;
@@ -107,42 +140,6 @@ CREATE TABLE sys_param(
     COMMENT = '参数表';
 
 CREATE UNIQUE INDEX uk_code ON sys_param (code);
-
--- user
-DROP TABLE IF EXISTS sys_user;
-CREATE TABLE sys_user(
-    id     INT UNSIGNED PRIMARY KEY  AUTO_INCREMENT  NOT NULL  COMMENT '用户Id',
-    org_id        INT UNSIGNED    DEFAULT 0          NOT NULL  COMMENT '机构Id',
-    code          VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '用户编号',
-    job_num       VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '工号',
-    username      VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '用户名',
-    nick_name     VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '昵称',
-    real_name     VARCHAR(16)     DEFAULT ''         NOT NULL  COMMENT '真实姓名',
-    mobile_num    VARCHAR(16)     DEFAULT ''         NOT NULL  COMMENT '手机号',
-    avatar        VARCHAR(256)    DEFAULT ''         NOT NULL  COMMENT '头像',
-    password      VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '密码',
-    gender        TINYINT(1)      DEFAULT 1          NOT NULL  COMMENT '性别',
-    email         VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '邮箱',
-    id_card_num   VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '身份证号',
-    telephone     VARCHAR(16)     DEFAULT ''         NOT NULL  COMMENT '电话',
-    type          VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '用户类型',
-    status        VARCHAR(32)     DEFAULT ''         NOT NULL  COMMENT '用户状态',
-    is_lock       TINYINT(1)      DEFAULT 0          NOT NULL  COMMENT '是否锁定',
-    creator       VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '创建人',
-    is_deleted    TINYINT(1)      DEFAULT 0          NOT NULL  COMMENT '是否删除',
-    gmt_created   DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  COMMENT '创建时间',
-    gmt_modified  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL  ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    gmt_deleted   DATETIME DEFAULT '2000-01-01'      NOT NULL  COMMENT '删除时间'
-)
-    ENGINE = InnoDB
-    DEFAULT CHARSET = utf8
-    COLLATE = utf8_general_ci
-    COMMENT = '用户表';
-
-CREATE UNIQUE INDEX uk_name
-    ON sys_user (username);
-CREATE INDEX uk_code_num
-    ON sys_user (code, job_num, mobile_num, email, id_card_num);
 
 -- security
 DROP TABLE IF EXISTS sys_role;
@@ -248,11 +245,6 @@ INSERT INTO sys_authority (code, name, function, module) VALUES ('ADD_ROLE', '�
 INSERT INTO sys_authority (code, name, function, module) VALUES ('MODIFY_ROLE', '修改角色', 'role_manager', 'system');
 INSERT INTO sys_authority (code, name, function, module) VALUES ('REMOVE_ROLE', '删除角色', 'role_manager', 'system');
 INSERT INTO sys_authority (code, name, function, module) VALUES ('VIEW_AUTHORITY', '查看权限', 'role_manager', 'system');
-
-DELETE FROM sys_user;
-INSERT INTO sys_user (org_id, code, job_num, username, mobile_num, avatar, password, gender)
-VALUES (0, '001', '', 'liulu', '', '15267548275', '$2a$10$4d.sZRSu0mNup8TKQtamM.K4CBf9ZIwC7gMuN4B5MROP9iykCnLRC', TRUE);
-
 
 
 

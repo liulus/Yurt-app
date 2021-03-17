@@ -46,6 +46,7 @@ open class WebMvcConfiguration : WebMvcConfigurer {
         routes.addRoute("/sys/menu", "/view/${viewProperties.ui}/menu.js")
         routes.addRoute("/sys/dictionary", "/view/${viewProperties.ui}/dictionary.js")
         routes.addRoute("/sys/user", "/view/${viewProperties.ui}/user.js")
+        routes.addRoute("/sys/user/edit", "/view/${viewProperties.ui}/user-edit.js")
         routes.addRoute("/sys/dept", "/view/${viewProperties.ui}/dept.js")
         return routes
     }
