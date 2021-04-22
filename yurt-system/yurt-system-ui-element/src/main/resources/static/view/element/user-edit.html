@@ -69,3 +69,39 @@
         </el-row>
     </div>
 </main>
+<script>
+    return {
+        data: function () {
+            return {
+                deptData: [],
+                editForm: {
+                    deptName: ''
+                }
+            }
+        },
+        created: function () {
+//            this.initData()
+            this.initDeptTree()
+        },
+        methods: {
+            initData: function () {
+                Tools.http.get('/api/dept/tree')
+                    .then(res => {
+                        
+                    })
+            },
+            initDeptTree: function () {
+                Tools.http.get('/api/dept/tree')
+                    .then(res => this.deptData = res.data)
+            },
+            handleNodeClick: function (node) {
+                this.editForm.deptName = node.name
+                this.editForm.deptId = node.id
+                this.$refs.editDept.blur()
+            },
+            doEdit: function() {
+                console.log(this.editForm)
+            }
+        }
+    }
+</script>

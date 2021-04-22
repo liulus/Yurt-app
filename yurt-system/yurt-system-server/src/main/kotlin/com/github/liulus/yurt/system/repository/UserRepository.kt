@@ -19,7 +19,7 @@ interface UserRepository : JdbcRepository<User> {
     @Select(
         testWheres = [
             If(test = "username !=null && username != ''", value = "username like :username"),
-            If(test = "mobileNum !=null && mobileNum != ''", value = "mobile_num = :mobileNum"),
+            If(test = "mobileNum !=null && mobileNum != ''", value = "mobile_num like :mobileNum"),
         ], where = [Select.NOT_DELETED]
     )
     fun selectByQuery(query: UserDTO.Query): List<User>

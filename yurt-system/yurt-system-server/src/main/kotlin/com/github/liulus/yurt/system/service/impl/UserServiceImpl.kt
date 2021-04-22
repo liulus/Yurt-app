@@ -8,6 +8,7 @@ import com.github.liulus.yurt.system.model.dto.UserDTO
 import com.github.liulus.yurt.system.model.dto.UserVo
 import com.github.liulus.yurt.system.model.dto.UserVo.Register
 import com.github.liulus.yurt.system.model.entity.User
+import com.github.liulus.yurt.system.repository.DeptRepository
 import com.github.liulus.yurt.system.repository.UserRepository
 import com.github.liulus.yurt.system.service.UserService
 import org.springframework.stereotype.Service
@@ -27,6 +28,9 @@ open class UserServiceImpl : UserService {
     @Resource
     private lateinit var userRepository: UserRepository
 
+    @Resource
+    private lateinit var deptRepository: DeptRepository
+
     override fun register(register: Register?): Long? {
         if (register!!.password != register.confirmPassword) {
             throw ServiceException("密码和确认密码不一致")
@@ -34,7 +38,7 @@ open class UserServiceImpl : UserService {
         if (register.smsCaptcha != "1234") {
             throw ServiceException("手机验证码不正确")
         }
-        return insert(BeanUtils.convert(register, UserVo.Add()))
+        return insert(BeanUtils.convert(register, UserDTO.View()))
     }
 
     override fun findById(id: Long?): User? {
@@ -46,11 +50,21 @@ open class UserServiceImpl : UserService {
     }
 
     override fun findPageList(query: UserDTO.Query): Page<UserDTO.View> {
+        if (!query.mobileNum.isNullOrEmpty()) {
+            query.mobileNum = query.mobileNum + "%"
+        }
         val dictList = userRepository.selectByQuery(query)
-        return Pages.page(dictList).simpleMap { BeanUtils.convert(it, UserDTO.View()) }
+        val deptIds = dictList.mapNotNull { it.deptId }
+        val deptMap = deptRepository.selectByIds(deptIds).associateBy({ it.id }, { it })
+
+        return Pages.page(dictList).simpleMap {
+            val view = BeanUtils.convert(it, UserDTO.View())
+            view.deptName = deptMap[it.deptId]?.name ?: ""
+            view
+        }
     }
 
-    override fun insert(user: UserVo.Add?): Long? {
+    override fun insert(user: UserDTO.View): Long {
         checkUsername(user!!.username!!)
         checkEmail(user.email!!)
         checkMobileNum(user.mobileNum!!)
@@ -59,10 +73,10 @@ open class UserServiceImpl : UserService {
         // 设置默认值
         addUser.lock = false
         //        addUser.setCreator(UserUtils.getLoginUser().getUsername());
-        val password = if (StringUtils.hasText(user.password)) user.password else "123456"
+        val password = "123456"
         //        addUser.setPassword(UserUtils.encode(password));
         userRepository.insert(addUser)
-        return addUser.id
+        return addUser.id!!
     }
 
     override fun update(user: UserVo.Update?) {

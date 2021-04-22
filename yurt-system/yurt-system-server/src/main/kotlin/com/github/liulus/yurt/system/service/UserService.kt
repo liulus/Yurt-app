@@ -46,9 +46,9 @@ interface UserService {
     /**
      * 新增用户
      *
-     * @param user user
+     * @param add user
      */
-    fun insert(user: UserVo.Add?): Long?
+    fun insert(user: UserDTO.View): Long
 
     /**
      * 修改用户

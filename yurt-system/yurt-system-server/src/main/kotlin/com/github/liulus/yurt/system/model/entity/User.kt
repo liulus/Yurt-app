@@ -14,7 +14,7 @@ import javax.persistence.Table
 @Table(name = TABLE_PREFIX_SYS + "user")
 data class User(
     var id: Long? = null,
-    var orgId: Long? = null,
+    var deptId: Long? = null,
     var username: String? = null,
     var nickName: String? = null,
     var mobileNum: String? = null,

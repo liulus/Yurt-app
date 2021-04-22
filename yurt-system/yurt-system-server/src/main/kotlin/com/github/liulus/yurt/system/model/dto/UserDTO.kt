@@ -21,12 +21,12 @@ abstract class UserDTO {
         var username: String? = null
         var nickName: String? = null
         var mobileNum: String? = null
+        var email: String? = null
         var status: String? = null
         var statusText: String? = null
 
         var deptId: Long? = null
         var deptName: String? = null
-
     }
 
 

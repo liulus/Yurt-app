@@ -31,7 +31,7 @@
             .then(res => (res.headers.get("content-type") || '').indexOf('application/json') >= 0 ? res.json() : res.text())
             .then(res => res.code == 'UN_LOGIN' ? window.location.href = '/login' : res)
             .then(res => {
-                if(res.success) {
+                if (res.success) {
                     return res
                 }
                 window.app.$message.error(res.message)
@@ -49,7 +49,29 @@
         return paramArray.join('&')
     }
 
+    function _import(dep) {
+        return function () {
+            if (dep.indexOf('text!') < 0) {
+                dep = 'text!' + dep
+            }
+            return new Promise(function (resolve, reject) {
+                require(Array.isArray(dep) ? dep : [dep], function (res) {
+                    var start = res.indexOf('<script>')
+                    if (start < 0) {
+                        resolve({ template: res })
+                        return;
+                    }
+                    var end = res.indexOf('<\/script>')
+                    var config = (new Function(res.substring(start + 8, end)))()
+                    config.template = res.substring(0, start)
+                    resolve(config)
+                })
+            })
+        }
+    }
+
     return {
+        _import: _import,
         http: {
             get: function (url, params) {
                 return request('get', url, params, false)

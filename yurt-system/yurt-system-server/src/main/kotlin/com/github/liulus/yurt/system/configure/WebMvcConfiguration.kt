@@ -42,12 +42,12 @@ open class WebMvcConfiguration : WebMvcConfigurer {
         index.path = "/"
         index.redirect = "/home"
         routes.addRoute(index)
-        routes.addRoute("/home", "/view/${viewProperties.ui}/home.js")
-        routes.addRoute("/sys/menu", "/view/${viewProperties.ui}/menu.js")
-        routes.addRoute("/sys/dictionary", "/view/${viewProperties.ui}/dictionary.js")
-        routes.addRoute("/sys/user", "/view/${viewProperties.ui}/user.js")
-        routes.addRoute("/sys/user/edit", "/view/${viewProperties.ui}/user-edit.js")
-        routes.addRoute("/sys/dept", "/view/${viewProperties.ui}/dept.js")
+        routes.addRoute("/home", "/view/${viewProperties.ui}/home.html")
+        routes.addRoute("/sys/menu", "/view/${viewProperties.ui}/menu.html")
+        routes.addRoute("/sys/dictionary", "/view/${viewProperties.ui}/dictionary.html")
+        routes.addRoute("/sys/user", "/view/${viewProperties.ui}/user.html")
+        routes.addRoute("/sys/user/edit", "/view/${viewProperties.ui}/user-edit.html")
+        routes.addRoute("/sys/dept", "/view/${viewProperties.ui}/dept.html")
         return routes
     }
 

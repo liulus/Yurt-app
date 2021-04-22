@@ -29,7 +29,7 @@ class Routes {
             val sb = StringBuilder("{")
             Optional.ofNullable(name).ifPresent { s -> sb.append(", name:'").append(s).append("'") }
             Optional.ofNullable(path).ifPresent { s -> sb.append(", path:'").append(s).append("'") }
-            Optional.ofNullable(component).ifPresent { s -> sb.append(", component:_import('").append(s).append("')") }
+            Optional.ofNullable(component).ifPresent { s -> sb.append(", component:Tools._import('").append(s).append("')") }
             Optional.ofNullable(redirect).ifPresent { s -> sb.append(", redirect:'").append(s).append("'") }
             sb.append(" }")
             val index = sb.indexOf(",")

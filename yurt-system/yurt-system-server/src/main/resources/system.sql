@@ -91,7 +91,7 @@ CREATE INDEX idx_level ON sys_dept (level_index);
 DROP TABLE IF EXISTS sys_user;
 CREATE TABLE sys_user(
     id     INT UNSIGNED PRIMARY KEY  AUTO_INCREMENT  NOT NULL  COMMENT '用户Id',
-    org_id        INT UNSIGNED    DEFAULT 0          NOT NULL  COMMENT '机构Id',
+    dept_id       INT UNSIGNED    DEFAULT 0          NOT NULL  COMMENT '部门Id',
     username      VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '用户名',
     nick_name     VARCHAR(64)     DEFAULT ''         NOT NULL  COMMENT '昵称',
     mobile_num    VARCHAR(16)     DEFAULT ''         NOT NULL  COMMENT '手机号',
